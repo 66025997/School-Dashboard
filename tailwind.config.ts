@@ -15,7 +15,7 @@ const config: Config = {
       },
       colors: {
         Npink : "#FFC7EE",
-        NSky: "#B9D2FF",
+        NSky: "#B9E5FF",
         NSkyLight: "#DCF8FF",
         NPurple: "#E2D9FF",
         NPurpleLight: "#F0EBFF",

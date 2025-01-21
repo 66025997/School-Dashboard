@@ -960,12 +960,6 @@ export const calendarEvents = [
     end: new Date(currentYear, currentMonth, currentDate, 14, 45),
   },
   {
-    title: "English",
-    allDay: false,
-    start: new Date(currentYear, currentMonth, currentDate + 1, 9, 0),
-    end: new Date(currentYear, currentMonth, currentDate + 1, 9, 45),
-  },
-  {
     title: "Biology",
     allDay: false,
     start: new Date(currentYear, currentMonth, currentDate + 1, 10, 0),

@@ -2,7 +2,9 @@
 
 ## Getting Started
 
-First, run the development server:
+โปรเจคระหว่างภาคเรียนการศึกษาชั้นปีที่ 2 เกี่ยวกับแดชบอร์ดการจัดการข้อมูลของโรงเรียน
+
+ขั้นแรก สามารถเริ่มดำเนิการพัฒนาได้โดย:
 
 ```bash
 npm run dev
@@ -14,4 +16,4 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+เปิด [http://localhost:3000](http://localhost:3000) บนเว็บไซต์บราวน์เซอร์เพื่อดูผลลัพธ์

@@ -1,17 +1,63 @@
-# School Dashboard Management
+# School Management Dashboard
 
-## Getting Started
+## คำอธิบายโปรเจค
+School Management Dashboard เป็นระบบจัดการข้อมูลโรงเรียนที่ออกแบบมาเพื่อสนับสนุนการจัดการข้อมูลของนักเรียน ครู ผู้ปกครอง และผู้ดูแลระบบ โดยมีฟีเจอร์หลักที่ช่วยให้ผู้ใช้งานสามารถ:
 
-First, run the development server:
+- ตรวจสอบตัวตนและกำหนดสิทธิ์การใช้งานตามบทบาท
+- จัดการข้อมูลนักเรียน เช่น การลงทะเบียน เกรด และการเข้าชั้นเรียน
+- แสดงผลข้อมูลตามสิทธิ์ของผู้ใช้งานผ่านแดชบอร์ด
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+โปรเจคนี้พัฒนาด้วยเทคโนโลยีสมัยใหม่ เช่น React, Next.js, Tailwind CSS, และ Prisma เพื่อความเร็วและประสิทธิภาพในการทำงาน
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
+
+## วิธีติดตั้ง
+1. **Clone Repository**
+   ```bash
+   git clone <URL ของ Repository>
+   cd <ชื่อโปรเจค>
+   ```
+
+2. **ติดตั้ง Dependencies**
+   ```bash
+   npm install
+   # หรือใช้ package manager อื่น เช่น yarn, pnpm
+   ```
+
+3. **ตั้งค่า Environment Variables**
+   สร้างไฟล์ `.env` และใส่ค่าที่จำเป็น เช่น:
+   ```env
+   DATABASE_URL=<URL ของฐานข้อมูล>
+   NEXT_PUBLIC_API_KEY=<API Key หากจำเป็น>
+   ```
+
+4. **รันเซิร์ฟเวอร์สำหรับพัฒนา**
+   ```bash
+   npm run dev
+   ```
+   จากนั้นเปิดเบราว์เซอร์และไปที่ [http://localhost:3000](http://localhost:3000)
+
+---
+
+## การใช้งาน(กำลังพัฒนา)
+### ขั้นตอนเบื้องต้น
+1. เข้าสู่ระบบผ่านหน้าล็อคอิน
+2. เลือกดูเมนูที่อยู่ในบทบาทของคุณ เช่น การจัดการชั้นเรียน (สำหรับครู) หรือการดูผลการเรียน (สำหรับผู้ปกครอง)
+
+### คำสั่งที่เกี่ยวข้อง
+- **Build โปรเจค:**
+  ```bash
+  npm run build
+  ```
+- **เริ่มระบบ Production:**
+  ```bash
+  npm start
+  ```
+- **Linting:**
+  ```bash
+  npm run lint
+  ```
+
+---
+
+## โปรเจคอยู่ในระหว่างการพัฒนา!

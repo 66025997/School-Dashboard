@@ -62,6 +62,25 @@ const Webpage: React.FC<Props> = () => {
         </div>
       </section>
 
+      <section className="py-12 bg-gray-100">
+        <div className="container mx-auto px-6">
+          <h3 className="text-2xl font-bold text-center mb-6">News and Updates</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white p-4 shadow-md rounded-md">
+              <h4 className="font-semibold">New Online Resources Available</h4>
+              <p className="text-sm text-gray-500">January 15, 2025</p>
+            </div>
+            <div className="bg-white p-4 shadow-md rounded-md">
+              <h4 className="font-semibold">Parent-Teacher Conference Schedule</h4>
+              <p className="text-sm text-gray-500">February 10, 2025</p>
+            </div>
+            <div className="bg-white p-4 shadow-md rounded-md">
+              <h4 className="font-semibold">Annual School Community Day</h4>
+              <p className="text-sm text-gray-500">March 5, 2025</p>
+            </div>
+          </div>
+        </div>
+      </section>
         </div>
     );
 };

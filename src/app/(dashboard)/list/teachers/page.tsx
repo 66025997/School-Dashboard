@@ -4,11 +4,12 @@ import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import { role, teachersData } from "@/lib/data";
 import prisma from "@/lib/prisma";
-import { Class, Subject, Teacher } from "@prisma/client";
+import { Class, Prisma, Subject, Teacher } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
+import { ITEM_PER_PAGE } from "@/lib/setting";
 
-type TeacherList = Teacher & { subjects: Subject[] } & { classes: Class[] };
+type TeacherList = Teacher & {subjects:Subject[]} & {classes:Class[]};
 
 const columns = [
   {
@@ -65,8 +66,12 @@ const columns = [
         </div>
       </td>
       <td className="hidden md:table-cell">{item.username}</td>
-      <td className="hidden md:table-cell">{item.subjects.map(subject=>subject.name).join(",")}</td>
-      <td className="hidden md:table-cell">{item.classes.map(classItem=>classItem.name).join(",")}</td>
+      <td className="hidden md:table-cell">
+        {item.subjects.map((subject) => subject.name).join(",")}
+      </td>
+      <td className="hidden md:table-cell">
+        {item.classes.map((classItem) => classItem.name).join(",")}
+      </td>
       <td className="hidden md:table-cell">{item.phone}</td>
       <td className="hidden md:table-cell">{item.address}</td>
       <td>
@@ -87,16 +92,52 @@ const columns = [
     </tr>
   );
 
-const TeacherListPage = async () => {
+const TeacherListPage = async ({
+  searchParams,
+}: {searchParams:{[key:string]:string | undefined}
+}) => {
 
-  const data = await prisma.teacher.findMany({
+  const {page, ...queryParams} = searchParams;
+
+  const p = page ? parseInt(page) : 1;
+
+  // URL PARAMS CONDITION
+
+  const query: Prisma.TeacherWhereInput = {};
+
+  if (queryParams) {
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined) {
+        switch (key) {
+          case "classId":
+            query.lessons = {
+              some: {
+                classId: parseInt(value),
+              },
+            };
+            break;
+          case "search":
+            query.name = { contains: value, mode: "insensitive" };
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
+  const [data, count] = await prisma.$transaction([
+  prisma.teacher.findMany({
+    where: query,
     include: {
       subjects: true,
       classes: true,
     },
-  });
-
-  console.log(data);
+    take: ITEM_PER_PAGE,
+    skip: ITEM_PER_PAGE * (p - 1),
+  }),
+  prisma.teacher.count({ where: query }),
+  ]);
 
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
@@ -114,9 +155,9 @@ const TeacherListPage = async () => {
             </button>
             {role === "admin" && (
               //<button className="w-8 h-8 flex items-center justify-center rounded-full bg-yellow-100">
-              //<Image src="/plus.png" alt="" width={14} height={14} />
-              //</button>
-              <FormModal table="teacher" type="create" />
+                //<Image src="/plus.png" alt="" width={14} height={14} />
+             //</button>
+            <FormModal table="teacher" type="create"/>
             )}
           </div>
         </div>
@@ -124,7 +165,7 @@ const TeacherListPage = async () => {
       {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={data} />
       {/* PAGINATION */}
-      <Pagination />
+      <Pagination page={p} count={count}/>
     </div>
   );
 };

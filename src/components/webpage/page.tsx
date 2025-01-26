@@ -5,7 +5,7 @@ type Props = {};
 const Webpage: React.FC<Props> = () => {
     return (
         <div className="bg-gray-100">
-            <header className="bg-white shadow">
+            <header className="bg-whit shadow">
                 <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                     <div className="flex items-center">
                         <img src="public/logo.png" alt="School-Dashboard logo" className="h-12" />
@@ -20,6 +20,14 @@ const Webpage: React.FC<Props> = () => {
                     </div>
                 </div>
             </header>
+
+            <section className="relative bg-center h-[500px]" style={{ backgroundImage:"url('public/page.png/hero-placeholder.jpg')" }} >
+            <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+            <div className="relative container mx-auto px-6 py-20 text-center text-white">
+               <h2 className="text-4xl font-bold">Faith, Community, and Excellence</h2>
+               <p className="mt-4 text-lg">Education in an environment of faith and virtue for Pre-K through 8th grade.</p>
+             </div>
+            </section>
         </div>
     );
 };

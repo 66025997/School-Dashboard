@@ -81,6 +81,19 @@ const Webpage: React.FC<Props> = () => {
           </div>
         </div>
       </section>
+
+      <footer className="bg-gray-800 text-white py-8">
+        <div className="container mx-auto px-6">
+          <div className="flex justify-between items-center">
+            <p className="text-sm">&copy; School Dashboard 2025. All Rights Reserved.</p>
+            <ul className="flex space-x-4 text-sm">
+              <li><a href="#" className="hover:text-gray-400">Dashboard Info</a></li>
+              <li><a href="#" className="hover:text-gray-400">Support</a></li>
+              <li><a href="#" className="hover:text-gray-400">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </footer>
         </div>
     );
 };

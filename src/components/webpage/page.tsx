@@ -28,6 +28,23 @@ const Webpage: React.FC<Props> = () => {
                <p className="mt-4 text-lg">Education in an environment of faith and virtue for Pre-K through 8th grade.</p>
              </div>
             </section>
+
+            <section className="py-12 bg-white">
+        <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="text-center">
+            <img src="public/page.png/who-we-are.jpg" alt="Who We Are" className="mx-auto mb-4 rounded-md shadow-md" />
+            <h3 className="text-xl font-semibold">Who We Are</h3>
+          </div>
+          <div className="text-center">
+            <img src="public/page.png/Academics.jpg" alt="Academics" className="mx-auto mb-4 rounded-md shadow-md" />
+            <h3 className="text-xl font-semibold">Academics</h3>
+          </div>
+          <div className="text-center">
+            <img src="public/page.png/Community.jpg" alt="Community" className="mx-auto mb-4 rounded-md shadow-md" />
+            <h3 className="text-xl font-semibold">Community</h3>
+          </div>
+        </div>
+      </section>
         </div>
     );
 };

@@ -45,6 +45,13 @@ const Webpage: React.FC<Props> = () => {
           </div>
         </div>
       </section>
+
+      <section className="py-12 bg-gray-100">
+        <div className="container mx-auto px-6 text-center">
+          <h3 className="text-2xl font-bold mb-4">Who We Are</h3>
+          <p className="text-gray-600 max-w-2xl mx-auto">Welcome to the Community School Dashboard, a platform designed to bring our school community closer together! This website serves as a central hub for everything you need, including the latest news, important events, school calendars, and valuable resources for students, parents, and teachers. We are committed to fostering a learning environment that supports everyone in our community, empowering growth together in knowledge and virtue</p>
+        </div>
+      </section>
         </div>
     );
 };

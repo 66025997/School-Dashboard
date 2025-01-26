@@ -11,8 +11,15 @@ const Webpage: React.FC<Props> = () => {
                         <img src="public/logo.png" alt="School-Dashboard logo" className="h-12" />
                         <h1 className="ml-4 text-2xl font-bold text-gray-800">SCHOOL DASHBOARD</h1>
                     </div> 
+                    <div>
+                        <ul className="flex space-x-4 text-gray-600">
+                            <li><a href="#" className="hover:text-blue-600">Calendar</a></li>
+                            <li><a href="#" className="hover:text-biue-600">Power School</a></li>
+                            <li><a href="#" className="hover:text-biue-600">Email Login</a></li>
+                        </ul>
+                    </div>
                 </div>
             </header>
         </div>
-    )
-}
+    );
+};

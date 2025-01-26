@@ -25,7 +25,7 @@ const Webpage: React.FC<Props> = () => {
             <div className="absolute inset-0 bg-black bg-opacity-40"></div>
             <div className="relative container mx-auto px-6 py-20 text-center text-white">
                <h2 className="text-4xl font-bold">Faith, Community, and Excellence</h2>
-               <p className="mt-4 text-lg">Education in an environment of faith and virtue for Pre-K through 8th grade.</p>
+               <p className="mt-4 text-lg">The School Dashboard platform is designed to support learning and effective school community management. This website serves as a hub for everything students, parents, and teachers need, such as the latest school news, activity calendars, academic records, and other valuable resources. Our goal is to create a central space that connects everyone in the community, fostering growth and promoting sustainable education.</p>
              </div>
             </section>
 
@@ -52,6 +52,16 @@ const Webpage: React.FC<Props> = () => {
           <p className="text-gray-600 max-w-2xl mx-auto">Welcome to the Community School Dashboard, a platform designed to bring our school community closer together! This website serves as a central hub for everything you need, including the latest news, important events, school calendars, and valuable resources for students, parents, and teachers. We are committed to fostering a learning environment that supports everyone in our community, empowering growth together in knowledge and virtue</p>
         </div>
       </section>
+
+      <section className="py-12 bg-white">
+        <div className="container mx-auto px-6 text-center">
+          <blockquote className="text-lg italic text-gray-700 max-w-xl mx-auto">
+            "The School Dashboard is a powerful platform designed to provide not only essential academic tools and resources but also to foster a sense of connection and growth within the school community. It equips students, parents, and teachers with the necessary tools to succeed academically while supporting the holistic development of individuals in an environment of collaboration and shared values."
+          </blockquote>
+          <p className="mt-4 text-gray-500">- Kaitoy , Codomo , Mamypoko | The strong woman behind the development of this server</p>
+        </div>
+      </section>
+
         </div>
     );
 };

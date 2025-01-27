@@ -8,7 +8,7 @@ const Webpage: React.FC<Props> = () => {
             <header className="bg-white shadow">
                 <div className="container mx-auto px-6 py-4 flex justify-between items-center">
                     <div className="flex items-center">
-                        <img src="public/logo.png" alt="School-Dashboard logo" className="h-12" />
+                        <img src="logo.png" alt="School-Dashboard logo" className="h-12" />
                         <h1 className="ml-4 text-2xl font-bold text-gray-800">SCHOOL DASHBOARD</h1>
                     </div> 
                     <div>
@@ -23,3 +23,4 @@ const Webpage: React.FC<Props> = () => {
         </div>
     );
 };
+export default Webpage;

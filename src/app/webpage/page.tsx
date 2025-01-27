@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Spline from "@splinetool/react-spline";
+import Footer from "@/components/webpage/Footer";
 
 export default function Webpage() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -52,6 +53,7 @@ export default function Webpage() {
           </div>
         </>
       )}
+      <Footer></Footer>
     </div>
   );
 }

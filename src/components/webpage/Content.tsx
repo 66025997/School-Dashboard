@@ -1,6 +1,6 @@
 import React from "react";
 
-
+import Service from "@/components/webpage/Service"
 type Props = {};
 
 const Webpage: React.FC<Props> = () => {
@@ -23,7 +23,7 @@ const Webpage: React.FC<Props> = () => {
         </div>
       </header>
 
-      <section className="relative bg-cover bg-center h-[500px]" style={{ backgroundImage: "url('page.png/hero-placeholder.jpg')" }}>
+      <section className="relative bg-cover bg-center h-[500px]" style={{ backgroundImage: "url('Webpage/hero-placeholder.jpg')" }}>
         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
         <div className="relative container mx-auto px-6 py-20 text-center text-white">
           <h2 className="text-4xl font-bold">Empowering Education</h2>
@@ -34,15 +34,15 @@ const Webpage: React.FC<Props> = () => {
       <section className="py-12 bg-white">
         <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
-            <img src="page.png/Academics.jpg" alt="Academics" className="mx-auto mb-4 rounded-md shadow-md" />
+            <img src="Webpage/Academics.jpg" alt="Academics" className="mx-auto mb-4 rounded-md shadow-md" />
             <h3 className="text-xl font-semibold">Academics</h3>
           </div>
           <div className="text-center">
-            <img src="page.png/Community.jpg" alt="Community" className="mx-auto mb-4 rounded-md shadow-md" />
+            <img src="Webpage/Community.jpg" alt="Community" className="mx-auto mb-4 rounded-md shadow-md" />
             <h3 className="text-xl font-semibold">Community</h3>
           </div>
           <div className="text-center">
-            <img src="page.png/Support.jpg" alt="Support" className="mx-auto mb-4 rounded-md shadow-md" />
+            <img src="Webpage/Support.jpg" alt="Support" className="mx-auto mb-4 rounded-md shadow-md" />
             <h3 className="text-xl font-semibold">Support</h3>
           </div>
         </div>
@@ -84,6 +84,8 @@ const Webpage: React.FC<Props> = () => {
         </div>
       </section>
 
+      <Service />
+
       <footer className="bg-gray-800 text-white py-8">
         <div className="container mx-auto px-6">
           <div className="flex justify-between items-center">
@@ -96,7 +98,7 @@ const Webpage: React.FC<Props> = () => {
           </div>
         </div>
       </footer>
-        </div>
-    );
+    </div>
+  );
 };
 export default Webpage;

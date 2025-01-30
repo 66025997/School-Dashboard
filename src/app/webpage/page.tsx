@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Spline from "@splinetool/react-spline";
-import Footer from "@/components/webpage/Footer";
+import Content from "@/components/webpage/Content";
 
 export default function Webpage() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -53,7 +53,7 @@ export default function Webpage() {
           </div>
         </>
       )}
-      <Footer></Footer>
+      <Content></Content>
     </div>
   );
 }

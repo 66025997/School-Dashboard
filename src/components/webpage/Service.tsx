@@ -1,21 +1,21 @@
 import { useState } from "react";
 
 const slides = [
-  { title: "Subjects", text: "Some description for slide 1" },
-  { title: "Classes", text: "Some description for slide 2." },
-  { title: "Lessons", text: "Some description for slide 3." },
-  { title: "Exams", text: "Some description for slide 4." },
-  { title: "Assignments", text: "Some description for slide 5." },
-  { title: "Results", text: "Some description for slide 5." },
-  { title: "Events", text: "Some description for slide 5." },
-  { title: "Announcements", text: "Some description for slide 6." }
+  { title: "Subjects", text: "Manage information on the subjects offered in the school, including the assignment of teachers for each subject." },
+  { title: "Classes", text: "Manage classroom information" },
+  { title: "Lessons", text: "Manage the lessons or content that teachers want students to study." },
+  { title: "Exams", text: "Manage exam information, such as exam schedules. Results and list of students who took the exam" },
+  { title: "Assignments", text: "For teachers to create and track assignments to students. Students can upload work to submit, and teachers can give grades or feedback." },
+  { title: "Results", text: "Record and display students' academic results in each subject." },
+  { title: "Events", text: "Create and track school activities" },
+  { title: "Announcements", text: "Create and manage announcements about important information or school news." }
 ];
 
 export default function Service() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length); 
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
   };
 
   return (
@@ -31,9 +31,9 @@ export default function Service() {
             style={{ transform: `translateX(-${(currentIndex * 100) / 3}%)` }} 
           >
             {slides.map((slide, index) => (
-              <div key={index} className="w-[33.33%] min-w-[300px] h-[400px] p-6 bg-white rounded-lg shadow-md flex flex-col justify-center items-center">
-                <h2 className="text-2xl font-semibold text-black text-center">{slide.title}</h2>
-                <p className="text-lg text-gray-700 text-center mt-4">{slide.text}</p>
+              <div key={index} className="w-[33.33%] min-w-[300px] h-[400px] p-12 bg-white rounded-lg shadow-md flex flex-col items-center">
+                <h2 className="text-2xl font-semibold text-black text-center mb-4">{slide.title}</h2>
+                <p className="text-lg text-gray-700 text-center">{slide.text}</p>
               </div>
             ))}
           </div>

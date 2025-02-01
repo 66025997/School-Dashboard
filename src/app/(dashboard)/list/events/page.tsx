@@ -7,9 +7,9 @@ import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/setting";
 import { Class, Prisma } from "@prisma/client";
 import Image from "next/image";
- 
+
 type EventList = Event & { id: string; class: Class; title: string; startTime: Date; endTime: Date }
- 
+
 const columns = [
   {
     header: "Title",
@@ -39,7 +39,7 @@ const columns = [
     accessor: "action",
   },
 ];
- 
+
 const renderRow = (item: EventList) => (
   <tr
     key={item.id}
@@ -76,20 +76,21 @@ const renderRow = (item: EventList) => (
     </td>
   </tr>
 );
- 
+
 const EventListPage = async ({
   searchParams,
-}: {searchParams:{[key:string]:string | undefined}
+}: {
+  searchParams: { [key: string]: string | undefined }
 }) => {
- 
-  const {page, ...queryParams} = searchParams;
- 
+
+  const { page, ...queryParams } = searchParams;
+
   const p = page ? parseInt(page) : 1;
- 
+
   // URL PARAMS CONDITION
- 
+
   const query: Prisma.EventWhereInput = {};
- 
+
   if (queryParams) {
     for (const [key, value] of Object.entries(queryParams)) {
       if (value !== undefined) {
@@ -103,7 +104,7 @@ const EventListPage = async ({
       }
     }
   }
- 
+
   const [data, count] = await prisma.$transaction([
     prisma.event.findMany({
       where: query,
@@ -115,8 +116,8 @@ const EventListPage = async ({
     }),
     prisma.event.count({ where: query }),
   ]);
- 
- 
+
+
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       {/* TOP */}
@@ -142,6 +143,5 @@ const EventListPage = async ({
     </div>
   );
 };
- 
+
 export default EventListPage;
- 

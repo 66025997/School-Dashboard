@@ -3,30 +3,25 @@
 import * as Clerk from "@clerk/elements/common";
 import * as SignIn from "@clerk/elements/sign-in";
 import { useUser } from "@clerk/nextjs";
+import { Console } from "console";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const LoginPage = () => {
     const { isLoaded, isSignedIn, user } = useUser();
+
+    console.log(user);
+
     const router = useRouter();
 
     useEffect(() => {
-        if (isLoaded && isSignedIn && user) {
-            const role = user.publicMetadata.role;
+        const role = user?.publicMetadata.role;
 
-            console.log("User data:", user);
-            console.log("isLoaded:", isLoaded, "isSignedIn:", isSignedIn);
-
-            if (role === "admin") {
-                router.replace("/admin");
-            } else if (role) {
-                router.replace(`/${role}`);
-            }
-        } else {
-            console.log("ข้อมูลผู้ใช้ยังไม่ถูกโหลดหรือผู้ใช้ไม่ได้เข้าสู่ระบบ");
+        if (role) {
+            router.push(`/${role}`);
         }
-    }, [isLoaded, isSignedIn, user, router]);
+    }, [user, router]);
 
     return (
         <div className="h-screen flex items-center justify-center bg-NSkyLight">
@@ -37,7 +32,7 @@ const LoginPage = () => {
                 >
                     <h1 className="text-xl font-bold flex items-center gap-2">
                         <Image src="/logo.png" alt="" width={24} height={24} />
-                        School
+                        SchooLama
                     </h1>
                     <h2 className="text-gray-400">Sign in to your account</h2>
                     <Clerk.GlobalError className="text-sm text-red-400" />

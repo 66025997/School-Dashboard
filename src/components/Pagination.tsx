@@ -1,6 +1,6 @@
 "use client";
 
-import { ITEM_PER_PAGE } from "@/lib/setting";
+import { ITEM_PER_PAGE } from "@/lib/settings";
 import { useRouter } from "next/navigation";
 
 const Pagination = ({ page, count }: { page: number; count: number }) => {
@@ -33,9 +33,8 @@ const Pagination = ({ page, count }: { page: number; count: number }) => {
             return (
               <button
                 key={pageIndex}
-                className={`px-2 rounded-sm ${
-                  page === pageIndex ? "bg-NSky" : ""
-                }`}
+                className={`px-2 rounded-sm ${page === pageIndex ? "bg-NSky" : ""
+                  }`}
                 onClick={() => {
                   changePage(pageIndex);
                 }}

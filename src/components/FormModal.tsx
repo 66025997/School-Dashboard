@@ -1,9 +1,13 @@
 "use client";
 
+//import { deleteSubject } from "@/lib/actions";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { useState } from "react";
-import { string } from "zod";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import { toast } from "react-toastify";
+
 
 // USE LAZY LOADING
 
@@ -16,10 +20,14 @@ const TeacherForm = dynamic(() => import("./forms/TeacherForm"), {
 const StudentForm = dynamic(() => import("./forms/StudentForm"), {
   loading: () => <h1>Loading...</h1>,
 });
+const SubjectForm = dynamic(() => import("./forms/SubjectForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
 
 const forms: {
   [key: string]: (type: "create" | "update", data?: any) => JSX.Element;
 } = {
+  subject: (type, data) => <SubjectForm type={type} data={data} />,
   teacher: (type, data) => <TeacherForm type={type} data={data} />,
   student: (type, data) => <StudentForm type={type} data={data} />
 };
@@ -58,6 +66,7 @@ const FormModal = ({
   const [open, setOpen] = useState(false);
 
   const Form = () => {
+
     return type === "delete" && id ? (
       <form action="" className="p-4 flex flex-col gap-4">
         <span className="text-center font-medium">

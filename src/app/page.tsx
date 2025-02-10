@@ -1,4 +1,4 @@
-"use client";  // ระบุให้คอมโพเนนต์นี้ทำงานในฝั่งไคลเอนต์
+"use client";
 
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
@@ -9,10 +9,10 @@ export function App() {
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);  // ทำให้แอปเรนเดอร์หลังจากการ hydrate
+        setIsClient(true);
     }, []);
 
-    if (!isClient) return null;  // รอจนกว่าแอปจะทำงานในฝั่งไคลเอนต์
+    if (!isClient) return null;
 
     return (
         <h1>This is never prerendered</h1>
@@ -25,19 +25,19 @@ const Webpage = () => {
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);  // ทำให้แน่ใจว่าเรนเดอร์ในฝั่งไคลเอนต์
+        setIsClient(true);
     }, []);
 
     useEffect(() => {
         if (isSignedIn && isClient) {
             const role = user?.publicMetadata.role;
             if (role) {
-                router.push(`/${role}`);  // นำผู้ใช้ไปยังหน้า dashboard ตามบทบาท
+                router.push(`/${role}`);
             }
         }
     }, [isSignedIn, user, router, isClient]);
 
-    if (!isClient) return null;  // รอจนกว่าแอปจะทำงานในฝั่งไคลเอนต์
+    if (!isClient) return null;
 
     return (
         <div suppressHydrationWarning={true}>

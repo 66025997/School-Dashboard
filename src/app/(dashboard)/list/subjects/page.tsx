@@ -2,9 +2,10 @@ import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
-import { role, subjectsData } from "@/lib/data";
+
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
+import { role } from "@/lib/utils";
 import { Prisma, Subject, Teacher } from "@prisma/client";
 import Image from "next/image";
 
@@ -101,7 +102,7 @@ const SubjectListPage = async ({
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-NYellow">
               <Image src="/sort.png" alt="" width={14} height={14} />
             </button>
-            {role === "admin" && <FormModal table="teacher" type="create" />}
+            {role === "admin" && <FormModal table="subject" type="create" />}
           </div>
         </div>
       </div>

@@ -466,3 +466,4 @@ export const deleteExam = async (
         return { success: false, error: true };
     }
 };
+

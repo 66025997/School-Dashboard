@@ -1,20 +1,26 @@
-import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
-
+import Image from "next/image";
+import React from "react";
+import FormModal from "@/components/FormModal";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
-import { currentUserId, role } from "@/lib/utils";
-import { Class, Prisma } from "@prisma/client";
-import Image from "next/image";
+import { Class, Event, Prisma } from "@prisma/client";
+import { auth } from "@clerk/nextjs/server";
+import FormContainer from "@/components/FormContainer";
 
-type EventList = Event & { id: string; class: Class; title: string; startTime: Date; endTime: Date }
+const { userId, sessionClaims } = await auth();
+const role = (sessionClaims?.metadata as { role?: string })?.role;
+const currentUserId=userId;
+
+type EventList = Event & { class: Class };
 
 const columns = [
   {
     header: "Title",
     accessor: "title",
+    className: "",
   },
   {
     header: "Class",
@@ -39,7 +45,8 @@ const columns = [
     ? [
         {
           header: "Actions",
-          accessor: "action",
+          accessor: "actions",
+          className: "",
         },
       ]
     : []),
@@ -53,10 +60,10 @@ const renderRow = (item: EventList) => (
     <td className="flex items-center gap-4 p-4">{item.title}</td>
     <td>{item.class?.name || "-"}</td>
     <td className="hidden md:table-cell">
-      {new Intl.DateTimeFormat("th-TH").format(item.startTime)}
+      {new Intl.DateTimeFormat("en-US").format(item.startTime)}
     </td>
     <td className="hidden md:table-cell">
-      {item.startTime.toLocaleTimeString("th-TH", {
+      {item.startTime.toLocaleTimeString("en-US", {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
@@ -67,32 +74,29 @@ const renderRow = (item: EventList) => (
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
-      })}
+      })}{" "}
     </td>
     <td>
       <div className="flex items-center gap-2">
         {role === "admin" && (
           <>
-            <FormModal table="event" type="update" data={item} />
-            <FormModal table="event" type="delete" id={item.id} />
+            <FormContainer table="event" type="update" data={item} />
+            <FormContainer table="event" type="delete" id={item.id} />
           </>
         )}
       </div>
     </td>
   </tr>
 );
-
 const EventListPage = async ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | undefined }
+  searchParams: { [key: string]: string | undefined };
 }) => {
-
-  const { page, ...queryParams } = searchParams;
-
+  const { page, ...queryParams } =await searchParams;
   const p = page ? parseInt(page) : 1;
 
-  // URL PARAMS CONDITION
+  // URL  PARAMS CONDITION
 
   const query: Prisma.EventWhereInput = {};
 
@@ -109,20 +113,20 @@ const EventListPage = async ({
       }
     }
   }
-
   // ROLE CONDITIONS
-
   const roleConditions = {
     teacher: { lessons: { some: { teacherId: currentUserId! } } },
     student: { students: { some: { id: currentUserId! } } },
     parent: { students: { some: { parentId: currentUserId! } } },
   };
 
-  query.OR = [{ classId: null },
+  query.OR=[
+    {classId :null},
     {
       class: roleConditions[role as keyof typeof roleConditions] || {},
     },
-  ];
+  ]
+
 
   const [data, count] = await prisma.$transaction([
     prisma.event.findMany({
@@ -135,7 +139,6 @@ const EventListPage = async ({
     }),
     prisma.event.count({ where: query }),
   ]);
-
 
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
@@ -151,13 +154,13 @@ const EventListPage = async ({
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-NYellow">
               <Image src="/sort.png" alt="" width={14} height={14} />
             </button>
-            {role === "admin" && <FormModal table="event" type="create" />}
+            <FormContainer table="event" type="create" />
           </div>
         </div>
       </div>
       {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={data} />
-      {/* PAGINATION */}
+      {/* PAGINTATION */}
       <Pagination page={p} count={count} />
     </div>
   );

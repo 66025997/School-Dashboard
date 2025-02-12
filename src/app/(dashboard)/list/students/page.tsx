@@ -86,7 +86,7 @@ const StudentListPage = async ({
             </button>
           </Link>
           {role === "admin" && (
-            // <button className="w-7 h-7 flex items-center justify-center rounded-full bg-lamaPurple">
+            // <button className="w-7 h-7 flex items-center justify-center rounded-full bg-NPurple">
             //   <Image src="/delete.png" alt="" width={16} height={16} />
             // </button>
             <FormContainer table="student" type="delete" id={item.id} />

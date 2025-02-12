@@ -44,30 +44,6 @@ const menuItems = [
         visible: ["admin", "teacher"],
       },
       {
-        icon: "/lesson.png",
-        label: "Lessons",
-        href: "/list/lessons",
-        visible: ["admin", "teacher"],
-      },
-      {
-        icon: "/exam.png",
-        label: "Exams",
-        href: "/list/exams",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
-      {
-        icon: "/assignment.png",
-        label: "Assignments",
-        href: "/list/assignments",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
-      {
-        icon: "/result.png",
-        label: "Results",
-        href: "/list/results",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
-      {
         icon: "/attendance.png",
         label: "Attendance",
         href: "/list/attendance",
@@ -108,7 +84,7 @@ const Menu = async () => {
                   key={item.label}
                   className="flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-2 rounded-md hover:bg-NYellowLight"
                 >
-                  <Image src={item.icon} alt="" width={20} height={20} />
+                  <Image src={item.icon} alt="" width={30} height={30} />
                   <span className="hidden lg:block">{item.label}</span>
                 </Link>
               );

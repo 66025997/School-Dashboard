@@ -1,6 +1,4 @@
-import { PrismaClient, UserSex, Day } from "@prisma/client";
-import moment from "moment-timezone";  // Import moment-timezone
-
+import { Day, PrismaClient, UserSex } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
@@ -60,7 +58,7 @@ async function main() {
   for (let i = 1; i <= 15; i++) {
     await prisma.teacher.create({
       data: {
-        id: `teacher${i}`, 
+        id: `teacher${i}`, // Unique ID for the teacher
         username: `teacher${i}`,
         name: `TName${i}`,
         surname: `TSurname${i}`,
@@ -69,11 +67,9 @@ async function main() {
         address: `Address${i}`,
         bloodType: "A+",
         sex: i % 2 === 0 ? UserSex.MALE : UserSex.FEMALE,
-        subjects: { connect: [{ id: (i % 10) + 1 }] },
-        classes: { connect: [{ id: (i % 6) + 1 }] },
-        birthday: moment(new Date(new Date().setFullYear(new Date().getFullYear() - 30)))
-          .tz("Asia/Bangkok")
-          .toDate(),  // แปลงเป็นเวลาในประเทศไทย
+        subjects: { connect: [{ id: (i % 10) + 1 }] }, 
+        classes: { connect: [{ id: (i % 6) + 1 }] }, 
+        birthday: new Date(new Date().setFullYear(new Date().getFullYear() - 30)),
       },
     });
   }
@@ -88,15 +84,11 @@ async function main() {
             Math.floor(Math.random() * Object.keys(Day).length)
           ] as keyof typeof Day
         ], 
-        startTime: moment(new Date(new Date().setHours(new Date().getHours() + 1)))
-          .tz("Asia/Bangkok")
-          .toDate(),  // แปลงเป็นเวลาในประเทศไทย
-        endTime: moment(new Date(new Date().setHours(new Date().getHours() + 3)))
-          .tz("Asia/Bangkok")
-          .toDate(),  // แปลงเป็นเวลาในประเทศไทย
-        subjectId: (i % 10) + 1,
-        classId: (i % 6) + 1,
-        teacherId: `teacher${(i % 15) + 1}`,
+        startTime: new Date(new Date().setHours(new Date().getHours() + 1)), 
+        endTime: new Date(new Date().setHours(new Date().getHours() + 3)), 
+        subjectId: (i % 10) + 1, 
+        classId: (i % 6) + 1, 
+        teacherId: `teacher${(i % 15) + 1}`, 
       },
     });
   }
@@ -132,9 +124,7 @@ async function main() {
         parentId: `parentId${Math.ceil(i / 2) % 25 || 25}`, 
         gradeId: (i % 6) + 1, 
         classId: (i % 6) + 1, 
-        birthday: moment(new Date(new Date().setFullYear(new Date().getFullYear() - 10)))
-          .tz("Asia/Bangkok")
-          .toDate(),  // แปลงเป็นเวลาในประเทศไทย
+        birthday: new Date(new Date().setFullYear(new Date().getFullYear() - 10)),
       },
     });
   }
@@ -143,14 +133,10 @@ async function main() {
   for (let i = 1; i <= 10; i++) {
     await prisma.exam.create({
       data: {
-        title: `Exam ${i}`,
-        startTime: moment(new Date(new Date().setHours(new Date().getHours() + 1)))
-          .tz("Asia/Bangkok")
-          .toDate(),  // แปลงเป็นเวลาในประเทศไทย
-        endTime: moment(new Date(new Date().setHours(new Date().getHours() + 2)))
-          .tz("Asia/Bangkok")
-          .toDate(),  // แปลงเป็นเวลาในประเทศไทย
-        lessonId: (i % 30) + 1,
+        title: `Exam ${i}`, 
+        startTime: new Date(new Date().setHours(new Date().getHours() + 1)), 
+        endTime: new Date(new Date().setHours(new Date().getHours() + 2)), 
+        lessonId: (i % 30) + 1, 
       },
     });
   }
@@ -159,14 +145,10 @@ async function main() {
   for (let i = 1; i <= 10; i++) {
     await prisma.assignment.create({
       data: {
-        title: `Assignment ${i}`,
-        startDate: moment(new Date(new Date().setHours(new Date().getHours() + 1)))
-          .tz("Asia/Bangkok")
-          .toDate(),  // แปลงเป็นเวลาในประเทศไทย
-        dueDate: moment(new Date(new Date().setDate(new Date().getDate() + 1)))
-          .tz("Asia/Bangkok")
-          .toDate(),  // แปลงเป็นเวลาในประเทศไทย
-        lessonId: (i % 30) + 1,
+        title: `Assignment ${i}`, 
+        startDate: new Date(new Date().setHours(new Date().getHours() + 1)), 
+        dueDate: new Date(new Date().setDate(new Date().getDate() + 1)), 
+        lessonId: (i % 30) + 1, 
       },
     });
   }
@@ -175,9 +157,9 @@ async function main() {
   for (let i = 1; i <= 10; i++) {
     await prisma.result.create({
       data: {
-        score: 90,
-        studentId: `student${i}`,
-        ...(i <= 5 ? { examId: i } : { assignmentId: i - 5 }),
+        score: 90, 
+        studentId: `student${i}`, 
+        ...(i <= 5 ? { examId: i } : { assignmentId: i - 5 }), 
       },
     });
   }
@@ -186,10 +168,10 @@ async function main() {
   for (let i = 1; i <= 10; i++) {
     await prisma.attendance.create({
       data: {
-        date: moment().tz("Asia/Bangkok").toDate(),  // แปลงเป็นเวลาในประเทศไทย
-        present: true,
-        studentId: `student${i}`,
-        lessonId: (i % 30) + 1,
+        date: new Date(), 
+        present: true, 
+        studentId: `student${i}`, 
+        lessonId: (i % 30) + 1, 
       },
     });
   }
@@ -198,15 +180,11 @@ async function main() {
   for (let i = 1; i <= 5; i++) {
     await prisma.event.create({
       data: {
-        title: `Event ${i}`,
-        description: `Description for Event ${i}`,
-        startTime: moment(new Date(new Date().setHours(new Date().getHours() + 1)))
-          .tz("Asia/Bangkok")
-          .toDate(),  // แปลงเป็นเวลาในประเทศไทย
-        endTime: moment(new Date(new Date().setHours(new Date().getHours() + 2)))
-          .tz("Asia/Bangkok")
-          .toDate(),  // แปลงเป็นเวลาในประเทศไทย
-        classId: (i % 5) + 1,
+        title: `Event ${i}`, 
+        description: `Description for Event ${i}`, 
+        startTime: new Date(new Date().setHours(new Date().getHours() + 1)), 
+        endTime: new Date(new Date().setHours(new Date().getHours() + 2)), 
+        classId: (i % 5) + 1, 
       },
     });
   }
@@ -215,10 +193,10 @@ async function main() {
   for (let i = 1; i <= 5; i++) {
     await prisma.announcement.create({
       data: {
-        title: `Announcement ${i}`,
-        description: `Description for Announcement ${i}`,
-        date: moment().tz("Asia/Bangkok").toDate(),  // แปลงเป็นเวลาในประเทศไทย
-        classId: (i % 5) + 1,
+        title: `Announcement ${i}`, 
+        description: `Description for Announcement ${i}`, 
+        date: new Date(), 
+        classId: (i % 5) + 1, 
       },
     });
   }

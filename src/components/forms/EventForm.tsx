@@ -3,12 +3,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
-import { Dispatch, SetStateAction, useActionState, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { eventSchema, EventSchema } from "@/lib/formValidationSchemas";
 import { createEvent, updateEvent } from "@/lib/actions";
-
+import { useFormState } from "react-dom";
 
 const EventForm = ({
     type,
@@ -29,9 +29,8 @@ const EventForm = ({
         resolver: zodResolver(eventSchema),
     });
 
-    // AFTER REACT 19 IT'LL BE USEACTIONSTATE
-
-    const [state, formAction] = useActionState(
+    // ใช้ useFormState แทน useActionState
+    const [state, formAction] = useFormState(
         type === "create" ? createEvent : updateEvent,
         {
             success: false,
@@ -47,22 +46,18 @@ const EventForm = ({
 
     useEffect(() => {
         if (state.success) {
-            toast(
-                `Event has been ${type === "create" ? "created" : "updated"}!`
-            );
+            toast(`Event has been ${type === "create" ? "created" : "updated"}!`);
             setOpen(false);
             router.refresh();
         }
     }, [state, router, type, setOpen]);
 
-    const { classes } = relatedData;
+    const classes = relatedData?.classes || [];
 
     return (
         <form className="flex flex-col gap-8" onSubmit={onSubmit}>
             <h1 className="text-xl font-semibold">
-                {type === "create"
-                    ? "Create a new event"
-                    : "Update the event"}
+                {type === "create" ? "Create a new event" : "Update the event"}
             </h1>
 
             <div className="flex justify-between flex-wrap gap-4">
@@ -116,16 +111,14 @@ const EventForm = ({
                     <select
                         className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full max-h-20 overflow-y-auto"
                         {...register("classId")}
-                        defaultValue={
-                            type === "create" ? data?.classes || "" : data?.classes
-                        }
+                        defaultValue={type === "create" ? "" : data?.classId}
                     >
                         <option value="" disabled>
                             Select a Class
                         </option>
-                        {classes.map((classId: { id: number; name: string }) => (
-                            <option value={classId.id} key={classId.id}>
-                                {classId.name}
+                        {classes.map((classItem: { id: number; name: string }) => (
+                            <option value={classItem.id} key={classItem.id}>
+                                {classItem.name}
                             </option>
                         ))}
                     </select>

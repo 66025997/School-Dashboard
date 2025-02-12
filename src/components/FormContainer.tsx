@@ -22,7 +22,7 @@ export type FormContainerProps = {
 };
 
 const FormContainer = async ({ table, type, data, id }: FormContainerProps) => {
-  let relatedData = {};
+  let relatedData: any = {}; // กำหนดค่าเริ่มต้นให้เป็น object
 
   const { userId, sessionClaims } = await auth();
   const role = (sessionClaims?.metadata as { role?: string })?.role;
@@ -60,6 +60,12 @@ const FormContainer = async ({ table, type, data, id }: FormContainerProps) => {
         });
         relatedData = { classes: studentClasses, grades: studentGrades };
         break;
+      case "parent":
+        const parentStudents = await prisma.student.findMany({
+          select: { id: true, name: true, surname: true },
+        });
+        relatedData = { students: parentStudents }; // แก้ไขให้มีโครงสร้างเหมือนกับอันอื่น
+        break;
       case "exam":
         const examLessons = await prisma.lesson.findMany({
           where: {
@@ -69,7 +75,22 @@ const FormContainer = async ({ table, type, data, id }: FormContainerProps) => {
         });
         relatedData = { lessons: examLessons };
         break;
-
+      case "lesson":
+        const teacherLesson = await prisma.teacher.findMany({
+          select: { id: true, name: true, surname: true },
+        });
+        const subjectLesson = await prisma.subject.findMany({
+          select: { id: true, name: true },
+        });
+        const classLesson = await prisma.class.findMany({
+          select: { id: true, name: true },
+        });
+        relatedData = {
+          teachers: teacherLesson,
+          subjects: subjectLesson,
+          classes: classLesson,
+        };
+        break;
       default:
         break;
     }

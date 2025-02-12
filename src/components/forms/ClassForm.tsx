@@ -3,18 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
-import {
-  classSchema,
-  ClassSchema,
-  subjectSchema,
-  SubjectSchema,
-} from "@/lib/formValidationSchemas";
-import {
-  createClass,
-  createSubject,
-  updateClass,
-  updateSubject,
-} from "@/lib/actions";
+import { classSchema, ClassSchema } from "@/lib/formValidationSchemas";
+import { createClass, updateClass } from "@/lib/actions";
 import { useFormState } from "react-dom";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -50,7 +40,6 @@ const ClassForm = ({
   );
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
     formAction(data);
   });
 
@@ -94,6 +83,7 @@ const ClassForm = ({
             defaultValue={data?.id}
             register={register}
             error={errors?.id}
+            hidden
           />
         )}
         <div className="flex flex-col gap-2 w-full md:w-1/4">
@@ -101,8 +91,11 @@ const ClassForm = ({
           <select
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
             {...register("supervisorId")}
-            defaultValue={data?.teachers}
+            defaultValue={type==="create" ? data?.teachers || "" : data?.teachers}
           >
+            <option value="" disabled>
+              Select a Teacher
+            </option>
             {teachers.map(
               (teacher: { id: string; name: string; surname: string }) => (
                 <option
@@ -126,8 +119,11 @@ const ClassForm = ({
           <select
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
             {...register("gradeId")}
-            defaultValue={data?.gradeId}
+            defaultValue={type==="create" ? data?.gradeId || "" : data?.gradeId}
           >
+            <option value="" disabled>
+              Select Grade
+            </option>
             {grades.map((grade: { id: number; level: number }) => (
               <option
                 value={grade.id}

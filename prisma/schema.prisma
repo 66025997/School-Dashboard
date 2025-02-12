@@ -50,6 +50,7 @@ model Teacher {
   subjects  Subject[]
   lessons   Lesson[]
   classes   Class[]
+  birthday  DateTime
 }
 
 model Parent {

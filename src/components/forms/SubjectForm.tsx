@@ -3,18 +3,20 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
-import { subjectSchema, SubjectSchema } from "@/lib/formValidationSchemas";
 import { createSubject, updateSubject } from "@/lib/actions";
 import { useFormState } from "react-dom";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useActionState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { subjectSchema, SubjectSchema } from "@/lib/formValidationSchemas";
+
 
 const SubjectForm = ({
     type,
     data,
     setOpen,
     relatedData,
+
 }: {
     type: "create" | "update";
     data?: any;
@@ -29,7 +31,7 @@ const SubjectForm = ({
         resolver: zodResolver(subjectSchema),
     });
 
-    // AFTER REACT 19 IT'LL BE USEACTIONSTATE
+    // After REACT 19 IT'LL BE USEACTIONSTATE
 
     const [state, formAction] = useFormState(
         type === "create" ? createSubject : updateSubject,
@@ -40,7 +42,7 @@ const SubjectForm = ({
     );
 
     const onSubmit = handleSubmit((data) => {
-        console.log(data);
+        //console.log(data);
         formAction(data);
     });
 
@@ -52,7 +54,7 @@ const SubjectForm = ({
             setOpen(false);
             router.refresh();
         }
-    }, [state, router, type, setOpen]);
+    }, [state, setOpen, router, type]);
 
     const { teachers } = relatedData;
 
@@ -61,7 +63,6 @@ const SubjectForm = ({
             <h1 className="text-xl font-semibold">
                 {type === "create" ? "Create a new subject" : "Update the subject"}
             </h1>
-
             <div className="flex justify-between flex-wrap gap-4">
                 <InputField
                     label="Subject name"
@@ -77,10 +78,11 @@ const SubjectForm = ({
                         defaultValue={data?.id}
                         register={register}
                         error={errors?.id}
+                        hidden
                     />
                 )}
                 <div className="flex flex-col gap-2 w-full md:w-1/4">
-                    <label className="text-xs text-gray-500">Teachers</label>
+                    <label className="text-xs text-gray-500">Teachers list</label>
                     <select
                         multiple
                         className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"

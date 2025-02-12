@@ -6,11 +6,13 @@ import InputField from "../InputField";
 import { Dispatch, SetStateAction, useActionState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { eventSchema, EventSchema } from "@/lib/formValidationSchemas";
-import { createEvent, updateEvent } from "@/lib/actions";
+import {
+    announcementSchema,
+    AnnouncementSchema,
+} from "@/lib/formValidationSchemas";
+import { createAnnouncement, updateAnnouncement } from "@/lib/actions";
 
-
-const EventForm = ({
+const AnnouncementForm = ({
     type,
     data,
     setOpen,
@@ -25,14 +27,14 @@ const EventForm = ({
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<EventSchema>({
-        resolver: zodResolver(eventSchema),
+    } = useForm<AnnouncementSchema>({
+        resolver: zodResolver(announcementSchema),
     });
 
     // AFTER REACT 19 IT'LL BE USEACTIONSTATE
 
     const [state, formAction] = useActionState(
-        type === "create" ? createEvent : updateEvent,
+        type === "create" ? createAnnouncement : updateAnnouncement,
         {
             success: false,
             error: false,
@@ -48,7 +50,7 @@ const EventForm = ({
     useEffect(() => {
         if (state.success) {
             toast(
-                `Event has been ${type === "create" ? "created" : "updated"}!`
+                `Announcement has been ${type === "create" ? "created" : "updated"}!`
             );
             setOpen(false);
             router.refresh();
@@ -61,13 +63,13 @@ const EventForm = ({
         <form className="flex flex-col gap-8" onSubmit={onSubmit}>
             <h1 className="text-xl font-semibold">
                 {type === "create"
-                    ? "Create a new event"
-                    : "Update the event"}
+                    ? "Create a new announcement"
+                    : "Update the announcement"}
             </h1>
 
             <div className="flex justify-between flex-wrap gap-4">
                 <InputField
-                    label="Event title"
+                    label="Announcement title"
                     name="title"
                     defaultValue={data?.title}
                     register={register}
@@ -75,19 +77,11 @@ const EventForm = ({
                 />
                 <InputField
                     label="Start Date"
-                    name="startTime"
-                    defaultValue={data?.startTime}
+                    name="date"
+                    defaultValue={data?.date}
                     register={register}
-                    error={errors?.startTime}
-                    type="datetime-local"
-                />
-                <InputField
-                    label="End Date"
-                    name="endTime"
-                    defaultValue={data?.endTime}
-                    register={register}
-                    error={errors?.endTime}
-                    type="datetime-local"
+                    error={errors?.date}
+                    type="date"
                 />
                 <InputField
                     label="Description"
@@ -111,6 +105,7 @@ const EventForm = ({
                         hidden
                     />
                 )}
+
                 <div className="flex flex-col gap-2 w-full md:w-1/4">
                     <label className="text-xs text-gray-500">Class</label>
                     <select
@@ -146,4 +141,4 @@ const EventForm = ({
     );
 };
 
-export default EventForm;
+export default AnnouncementForm;

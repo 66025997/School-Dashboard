@@ -1,7 +1,6 @@
 import Announcements from "@/components/Announcements";
 import BigCalendarContainer from "@/components/BigCalendarContainer";
 import FormContainer from "@/components/FormContainer";
-import Performance from "@/components/Performance";
 import StudentAttendanceCard from "@/components/StudentAttendanceCard";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
@@ -191,7 +190,6 @@ const SingleStudentPage = async ({
             </Link>
           </div>
         </div>
-        <Performance />
         <Announcements />
       </div>
     </div>

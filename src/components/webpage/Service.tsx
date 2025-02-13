@@ -3,10 +3,6 @@ import { useState } from "react";
 const slides = [
   { title: "Subjects", text: "Manage information on the subjects offered in the school, including the assignment of teachers for each subject." },
   { title: "Classes", text: "Manage classroom information" },
-  { title: "Lessons", text: "Manage the lessons or content that teachers want students to study." },
-  { title: "Exams", text: "Manage exam information, such as exam schedules. Results and list of students who took the exam" },
-  { title: "Assignments", text: "For teachers to create and track assignments to students. Students can upload work to submit, and teachers can give grades or feedback." },
-  { title: "Results", text: "Record and display students' academic results in each subject." },
   { title: "Events", text: "Create and track school activities" },
   { title: "Announcements", text: "Create and manage announcements about important information or school news." }
 ];
@@ -15,13 +11,13 @@ export default function Service() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % slides.length);
+    setCurrentIndex((prevIndex) => (prevIndex + 2) % slides.length);
   };
 
   return (
     <div className="relative flex items-center bg-Bisque p-6 rounded-lg shadow-lg">
       <div className="w-1/2">
-        <img src="Webpage/Academics.jpg" alt="Main visual" className="w-full h-auto rounded-lg shadow-md" />
+        <img src="Webpage/back to school.jpg" alt="Main visual" className="w-full h-auto rounded-lg shadow-md" />
       </div>
 
       <div className="w-1/2 relative p-6">

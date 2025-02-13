@@ -2,7 +2,6 @@
 
 import {
   deleteClass,
-  deleteExam,
   deleteStudent,
   deleteSubject,
   deleteTeacher,
@@ -20,12 +19,8 @@ const deleteActionMap = {
   class: deleteClass,
   teacher: deleteTeacher,
   student: deleteStudent,
-  exam: deleteExam,
-// TODO: OTHER DELETE ACTIONS
+  // TODO: OTHER DELETE ACTIONS
   parent: deleteSubject,
-  lesson: deleteSubject,
-  assignment: deleteSubject,
-  result: deleteSubject,
   attendance: deleteSubject,
   event: deleteSubject,
   announcement: deleteSubject,
@@ -46,9 +41,6 @@ const SubjectForm = dynamic(() => import("./forms/SubjectForm"), {
   loading: () => <h1>Loading...</h1>,
 });
 const ClassForm = dynamic(() => import("./forms/ClassForm"), {
-  loading: () => <h1>Loading...</h1>,
-});
-const ExamForm = dynamic(() => import("./forms/ExamForm"), {
   loading: () => <h1>Loading...</h1>,
 });
 const EventForm = dynamic(() => import("./forms/EventForm"), {
@@ -96,15 +88,8 @@ const forms: {
       relatedData={relatedData}
     />
   ),
-  exam: (setOpen, type, data, relatedData) => (
-    <ExamForm
-      type={type}
-      data={data}
-      setOpen={setOpen}
-      relatedData={relatedData}
-    />
-    // TODO OTHER LIST ITEMS
-  ),
+
+  // TODO OTHER LIST ITEMS
   event: (setOpen, type, data, relatedData) => (
     <EventForm
       type={type}
@@ -127,8 +112,8 @@ const FormModal = ({
     type === "create"
       ? "bg-NYellow"
       : type === "update"
-      ? "bg-NSky"
-      : "bg-NPurple";
+        ? "bg-NSky"
+        : "bg-NPurple";
 
   const [open, setOpen] = useState(false);
 

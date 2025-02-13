@@ -3,16 +3,13 @@
 import { revalidatePath } from "next/cache";
 import {
     ClassSchema,
-    ExamSchema,
-    LessonSchema,
     ParentSchema,
     StudentSchema,
     SubjectSchema,
     TeacherSchema,
-    AssignmentSchema,
+    AttendanceSchema,
     AnnouncementSchema,
     EventSchema,
-    ResultSchema,
 } from "./formValidationSchemas";
 import prisma from "./prisma";
 import { clerkClient } from "@clerk/nextjs/server";
@@ -376,233 +373,13 @@ export const deleteStudent = async (
     }
 };
 
-export const createExam = async (
-    currentState: CurrentState,
-    data: ExamSchema
-) => {
-    // const { userId, sessionClaims } = auth();
-    // const role = (sessionClaims?.metadata as { role?: string })?.role;
-
-    try {
-        // if (role === "teacher") {
-        //   const teacherLesson = await prisma.lesson.findFirst({
-        //     where: {
-        //       teacherId: userId!,
-        //       id: data.lessonId,
-        //     },
-        //   });
-
-        //   if (!teacherLesson) {
-        //     return { success: false, error: true };
-        //   }
-        // }
-
-        await prisma.exam.create({
-            data: {
-                title: data.title,
-                startTime: data.startTime,
-                endTime: data.endTime,
-                lessonId: data.lessonId,
-            },
-        });
-
-        // revalidatePath("/list/subjects");
-        return { success: true, error: false };
-    } catch (err) {
-        console.log(err);
-        return { success: false, error: true };
-    }
-};
-
-export const updateExam = async (
-    currentState: CurrentState,
-    data: ExamSchema
-) => {
-    // const { userId, sessionClaims } = auth();
-    // const role = (sessionClaims?.metadata as { role?: string })?.role;
-
-    try {
-        // if (role === "teacher") {
-        //   const teacherLesson = await prisma.lesson.findFirst({
-        //     where: {
-        //       teacherId: userId!,
-        //       id: data.lessonId,
-        //     },
-        //   });
-
-        //   if (!teacherLesson) {
-        //     return { success: false, error: true };
-        //   }
-        // }
-
-        await prisma.exam.update({
-            where: {
-                id: data.id,
-            },
-            data: {
-                title: data.title,
-                startTime: data.startTime,
-                endTime: data.endTime,
-                lessonId: data.lessonId,
-            },
-        });
-
-        // revalidatePath("/list/subjects");
-        return { success: true, error: false };
-    } catch (err) {
-        console.log(err);
-        return { success: false, error: true };
-    }
-};
-
-export const deleteExam = async (
-    currentState: CurrentState,
-    data: FormData
-) => {
-    const id = data.get("id") as string;
-
-    // const { userId, sessionClaims } = auth();
-    // const role = (sessionClaims?.metadata as { role?: string })?.role;
-
-    try {
-        await prisma.exam.delete({
-            where: {
-                id: parseInt(id),
-                // ...(role === "teacher" ? { lesson: { teacherId: userId! } } : {}),
-            },
-        });
-
-        // revalidatePath("/list/subjects");
-        return { success: true, error: false };
-    } catch (err) {
-        console.log(err);
-        return { success: false, error: true };
-    }
-};
-
-
-/*** Announcement Functions ***/
-export const createAnnouncement = async (
-    currentState: CurrentState,
-    data: AnnouncementSchema
-) => {
-    try {
-        await prisma.announcement.create({
-            data: {
-                title: data.title,
-                description: data.description,
-                date: data.date,
-                classId: data.classId,
-            },
-        });
-        return { success: true, error: false };
-    } catch (err) {
-        console.error("Error creating announcement:", err);
-        return { success: false, error: true };
-    }
-};
-
-export const updateAnnouncement = async (
-    currentState: CurrentState,
-    data: AnnouncementSchema
-) => {
-    try {
-        await prisma.announcement.update({
-            where: { id: data.id },
-            data: {
-                title: data.title,
-                description: data.description,
-                date: data.date,
-                classId: data.classId,
-            },
-        });
-        return { success: true, error: false };
-    } catch (err) {
-        console.error("Error updating announcement:", err);
-        return { success: false, error: true };
-    }
-};
-
-export const deleteAnnouncement = async (
-    currentState: CurrentState,
-    data: FormData
-) => {
-    const id = data.get("id") as string;
-    try {
-        await prisma.announcement.delete({ where: { id: parseInt(id) } });
-        return { success: true, error: false };
-    } catch (err) {
-        console.error("Error deleting announcement:", err);
-        return { success: false, error: true };
-    }
-};
-
-/*** Event Functions ***/
-export const createEvent = async (
-    currentState: CurrentState,
-    data: EventSchema
-) => {
-    try {
-        await prisma.event.create({
-            data: {
-                title: data.title,
-                description: data.description,
-                startTime: data.startTime,
-                endTime: data.endTime,
-                classId: data.classId,
-            },
-        });
-        return { success: true, error: false };
-    } catch (err) {
-        console.error("Error creating event:", err);
-        return { success: false, error: true };
-    }
-};
-
-export const updateEvent = async (
-    currentState: CurrentState,
-    data: EventSchema
-) => {
-    try {
-        await prisma.event.update({
-            where: { id: data.id },
-            data: {
-                title: data.title,
-                description: data.description,
-                startTime: data.startTime,
-                endTime: data.endTime,
-                classId: data.classId,
-            },
-        });
-        return { success: true, error: false };
-    } catch (err) {
-        console.error("Error updating event:", err);
-        return { success: false, error: true };
-    }
-};
-
-export const deleteEvent = async (
-    currentState: CurrentState,
-    data: FormData
-) => {
-    const id = data.get("id") as string;
-    try {
-        await prisma.event.delete({ where: { id: parseInt(id) } });
-        return { success: true, error: false };
-    } catch (err) {
-        console.error("Error deleting event:", err);
-        return { success: false, error: true };
-    }
-};
-
-/*** Parent Functions ***/
+// ✅ CRUD - Parent (ผู้ปกครอง)
 export const createParent = async (
-    currentState: CurrentState,
+    currentState: { success: boolean; error: boolean },
     data: ParentSchema
 ) => {
     try {
-        const resolvedClerkClient = await clerkClient();
-        const user = await resolvedClerkClient.users.createUser({
+        const user = await clerkClient.users.createUser({
             username: data.username,
             password: data.password,
             firstName: data.name,
@@ -617,68 +394,242 @@ export const createParent = async (
                 name: data.name,
                 surname: data.surname,
                 email: data.email || null,
-                phone: data.phone,
+                phone: data.phone || null,
                 address: data.address,
-                students: {
-                    connect: data.students?.map((studentId: string) => ({ id: studentId })),
-                },
             },
         });
 
         return { success: true, error: false };
-    } catch (err: any) {
-        console.error("Error creating parent:", err);
+    } catch (err) {
+        console.log(err);
         return { success: false, error: true };
     }
 };
 
 export const updateParent = async (
-    currentState: CurrentState,
+    currentState: { success: boolean; error: boolean },
     data: ParentSchema
 ) => {
-    if (!data.id) return { success: false, error: true };
+    if (!data.id) {
+        return { success: false, error: true };
+    }
     try {
-        const resolvedClerkClient = await clerkClient();
-        await resolvedClerkClient.users.updateUser(data.id, {
+        await clerkClient.users.updateUser(data.id, {
             username: data.username,
-            ...(data.password !== "" && { password: data.password }),
             firstName: data.name,
             lastName: data.surname,
         });
 
         await prisma.parent.update({
-            where: { id: data.id },
+            where: {
+                id: data.id,
+            },
             data: {
                 username: data.username,
                 name: data.name,
                 surname: data.surname,
                 email: data.email || null,
-                phone: data.phone,
+                phone: data.phone || null,
                 address: data.address,
-                students: {
-                    set: data.students?.map((studentId: string) => ({ id: studentId })),
-                },
             },
         });
+
         return { success: true, error: false };
-    } catch (err: any) {
-        console.error("Error updating parent:", err);
+    } catch (err) {
+        console.log(err);
         return { success: false, error: true };
     }
 };
 
 export const deleteParent = async (
-    currentState: CurrentState,
+    currentState: { success: boolean; error: boolean },
     data: FormData
 ) => {
     const id = data.get("id") as string;
     try {
-        const resolvedClerkClient = await clerkClient();
+        await clerkClient.users.deleteUser(id);
         await prisma.parent.delete({ where: { id } });
-        await resolvedClerkClient.users.deleteUser(id);
+
         return { success: true, error: false };
-    } catch (err: any) {
-        console.error("Error deleting parent:", err);
-        return { success: false, error: true, message: "Failed to delete parent" };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+};
+
+// ✅ CRUD - Attendance (การเข้าเรียน)
+export const createAttendance = async (
+    currentState: { success: boolean; error: boolean },
+    data: AttendanceSchema
+) => {
+    try {
+        await prisma.attendance.create({
+            data: {
+                studentId: data.studentId,
+                date: data.date,
+                present: data.present,
+            },
+        });
+
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+};
+
+export const updateAttendance = async (
+    currentState: { success: boolean; error: boolean },
+    data: AttendanceSchema
+) => {
+    try {
+        await prisma.attendance.update({
+            where: { id: data.id },
+            data: {
+                studentId: data.studentId,
+                date: data.date,
+                present: data.present,
+            },
+        });
+
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+};
+
+export const deleteAttendance = async (
+    currentState: { success: boolean; error: boolean },
+    data: FormData
+) => {
+    const id = parseInt(data.get("id") as string);
+    try {
+        await prisma.attendance.delete({ where: { id } });
+
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+};
+
+// ✅ CRUD - Event (กิจกรรม)
+export const createEvent = async (
+    currentState: { success: boolean; error: boolean },
+    data: EventSchema
+) => {
+    try {
+        await prisma.event.create({
+            data: {
+                title: data.title,
+                description: data.description,
+                startTime: data.startTime,
+                endTime: data.endTime,
+                classId: data.classId || null,
+            },
+        });
+
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+};
+
+export const updateEvent = async (
+    currentState: { success: boolean; error: boolean },
+    data: EventSchema
+) => {
+    try {
+        await prisma.event.update({
+            where: { id: data.id },
+            data: {
+                title: data.title,
+                description: data.description,
+                startTime: data.startTime,
+                endTime: data.endTime,
+                classId: data.classId || null,
+            },
+        });
+
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+};
+
+export const deleteEvent = async (
+    currentState: { success: boolean; error: boolean },
+    data: FormData
+) => {
+    const id = parseInt(data.get("id") as string);
+    try {
+        await prisma.event.delete({ where: { id } });
+
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+};
+
+// ✅ CRUD - Announcement (ประกาศ)
+export const createAnnouncement = async (
+    currentState: { success: boolean; error: boolean },
+    data: AnnouncementSchema
+) => {
+    try {
+        await prisma.announcement.create({
+            data: {
+                title: data.title,
+                description: data.description,
+                date: data.date,
+                classId: data.classId || null,
+            },
+        });
+
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+};
+
+export const updateAnnouncement = async (
+    currentState: { success: boolean; error: boolean },
+    data: AnnouncementSchema
+) => {
+    try {
+        await prisma.announcement.update({
+            where: { id: data.id },
+            data: {
+                title: data.title,
+                description: data.description,
+                date: data.date,
+                classId: data.classId || null,
+            },
+        });
+
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
+    }
+};
+
+export const deleteAnnouncement = async (
+    currentState: { success: boolean; error: boolean },
+    data: FormData
+) => {
+    const id = parseInt(data.get("id") as string);
+    try {
+        await prisma.announcement.delete({ where: { id } });
+
+        return { success: true, error: false };
+    } catch (err) {
+        console.log(err);
+        return { success: false, error: true };
     }
 };

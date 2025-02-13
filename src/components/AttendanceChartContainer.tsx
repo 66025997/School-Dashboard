@@ -1,63 +1,61 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import AttendanceChart from "./AttendanceChart";
+import prisma from "@/lib/prisma";
 
-const AttendanceChartContainer = () => {
-    const [attendanceData, setAttendanceData] = useState<{ name: string; present: number; absent: number }[]>([]);
+const AttendanceChartContainer = async () => {
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await fetch("/api/attendance");
-                const data = await res.json();
+    const lastMonday = new Date(today);
 
-                // ตรวจสอบว่า API ส่ง error หรือไม่
-                if (data.error) {
-                    console.error("Error fetching attendance data:", data.error);
-                    return;
-                }
+    lastMonday.setDate(today.getDate() - daysSinceMonday);
 
-                // Process Data
-                const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-                const attendanceMap: { [key: string]: { present: number; absent: number } } = {
-                    Mon: { present: 0, absent: 0 },
-                    Tue: { present: 0, absent: 0 },
-                    Wed: { present: 0, absent: 0 },
-                    Thu: { present: 0, absent: 0 },
-                    Fri: { present: 0, absent: 0 },
-                };
+    const resData = await prisma.attendance.findMany({
+        where: {
+            date: {
+                gte: lastMonday,
+            },
+        },
+        select: {
+            date: true,
+            present: true,
+        },
+    });
 
-                data.forEach((item: { date: string; present: boolean }) => {
-                    const itemDate = new Date(item.date);
-                    const dayOfWeek = itemDate.getDay();
+    // console.log(data)
 
-                    if (dayOfWeek >= 1 && dayOfWeek <= 5) {
-                        const dayName = daysOfWeek[dayOfWeek - 1];
+    const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
-                        if (item.present) {
-                            attendanceMap[dayName].present += 1;
-                        } else {
-                            attendanceMap[dayName].absent += 1;
-                        }
-                    }
-                });
+    const attendanceMap: { [key: string]: { present: number; absent: number } } =
+    {
+        Mon: { present: 0, absent: 0 },
+        Tue: { present: 0, absent: 0 },
+        Wed: { present: 0, absent: 0 },
+        Thu: { present: 0, absent: 0 },
+        Fri: { present: 0, absent: 0 },
+    };
 
-                const formattedData = daysOfWeek.map((day) => ({
-                    name: day,
-                    present: attendanceMap[day].present,
-                    absent: attendanceMap[day].absent,
-                }));
+    resData.forEach((item) => {
+        const itemDate = new Date(item.date);
+        const dayOfWeek = itemDate.getDay();
 
-                setAttendanceData(formattedData);
-            } catch (error) {
-                console.error("Error fetching attendance data:", error);
+        if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+            const dayName = daysOfWeek[dayOfWeek - 1];
+
+            if (item.present) {
+                attendanceMap[dayName].present += 1;
+            } else {
+                attendanceMap[dayName].absent += 1;
             }
-        };
+        }
+    });
 
-        fetchData();
-    }, []);
+    const data = daysOfWeek.map((day) => ({
+        name: day,
+        present: attendanceMap[day].present,
+        absent: attendanceMap[day].absent,
+    }));
 
     return (
         <div className="bg-white rounded-lg p-4 h-full">
@@ -65,7 +63,7 @@ const AttendanceChartContainer = () => {
                 <h1 className="text-lg font-semibold">Attendance</h1>
                 <Image src="/moreDark.png" alt="" width={20} height={20} />
             </div>
-            <AttendanceChart data={attendanceData} />
+            <AttendanceChart data={data} />
         </div>
     );
 };

@@ -1,47 +1,33 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import prisma from "@/lib/prisma";
 import BigCalendar from "./BigCalender";
+import { adjustScheduleToCurrentWeek } from "@/lib/utils";
 
-interface BigCalendarContainerProps {
-    type: string;
-    id: string;
-}
+const BigCalendarContainer = async ({
+    type,
+    id,
+}: {
+    type: "teacherId" | "classId";
+    id: string | number;
+}) => {
+    const dataRes = await prisma.lesson.findMany({
+        where: {
+            ...(type === "teacherId"
+                ? { teacherId: id as string }
+                : { classId: id as number }),
+        },
+    });
 
-const BigCalendarContainer = ({ type, id }: BigCalendarContainerProps) => {
-    interface Subject {
-        name: string;
-        // Add other properties if needed
-    }
-
-    const [subjectsData, setSubjectsData] = useState<Subject[]>([]);
-
-    useEffect(() => {
-        const fetchSubjects = async () => {
-            try {
-                const res = await fetch(`/api/subjects?type=${type}&id=${id}`);
-                const data = await res.json();
-                setSubjectsData(data);
-            } catch (error) {
-                console.error("Error fetching subjects:", error);
-            }
-        };
-
-        fetchSubjects();
-    }, [type, id]);
-
-    const data = subjectsData.map((subject, index) => ({
-        title: subject.name,
-        start: new Date(new Date().setHours(9 + index, 0, 0)),
-        end: new Date(new Date().setHours(10 + index, 0, 0)),
+    const data = dataRes.map((lesson) => ({
+        title: lesson.name,
+        start: lesson.startTime,
+        end: lesson.endTime,
     }));
 
+    const schedule = adjustScheduleToCurrentWeek(data);
+
     return (
-        <div className="bg-white p-4 rounded-lg">
-            <h1 className="text-lg font-semibold">
-                {type === "teacherId" ? "Subjects Taught" : "Subjects in Class"}
-            </h1>
-            <BigCalendar data={data} />
+        <div className="">
+            <BigCalendar data={schedule} />
         </div>
     );
 };

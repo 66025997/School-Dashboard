@@ -60,12 +60,12 @@ const menuItems = [
         href: "/list/assignments",
         visible: ["admin", "teacher", "student", "parent"],
       },
-      {
-        icon: "/result.png",
-        label: "Results",
-        href: "/list/results",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
+      // {
+      //   icon: "/result.png",
+      //   label: "Results",
+      //   href: "/list/results",
+      //   visible: ["admin", "teacher", "student", "parent"],
+      // },
       {
         icon: "/attendance.png",
         label: "Attendance",

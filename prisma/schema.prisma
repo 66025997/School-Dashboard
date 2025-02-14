@@ -25,7 +25,7 @@ model Student {
   sex         UserSex
   createdAt   DateTime     @default(now())
   parentId    String
-  parent      Parent       @relation(fields: [parentId], references: [id], onDelete:Cascade)
+  parent      Parent       @relation(fields: [parentId], references: [id], onDelete: Cascade)
   classId     Int
   class       Class        @relation(fields: [classId], references: [id])
   gradeId     Int
@@ -62,7 +62,7 @@ model Parent {
   phone     String    @unique
   address   String
   createdAt DateTime  @default(now())
-  students  Student[]
+  students  Student[] 
 }
 
 model Grade {

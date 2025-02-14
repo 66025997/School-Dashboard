@@ -36,7 +36,7 @@ const LessonForm = ({
 
     // AFTER REACT 19 IT'LL BE USEACTIONSTATE
 
-    const [state, formAction] = useActionState(
+    const [state, formAction] = useFormState(
         type === "create" ? createLesson : updateLesson,
         {
             success: false,
@@ -44,8 +44,9 @@ const LessonForm = ({
         }
     );
 
+
     const onSubmit = handleSubmit((data) => {
-        //console.log(data);
+        console.log("Form Data:", data);
         formAction(data);
     });
 
@@ -56,8 +57,11 @@ const LessonForm = ({
             toast(`Lesson has been ${type === "create" ? "created" : "updated"}!`);
             setOpen(false);
             router.refresh();
+        } else if (state.error) {
+            toast.error("Something went wrong!");
         }
     }, [state, router, type, setOpen]);
+
 
     const { teachers, subjects, classes } = relatedData;
 
@@ -138,22 +142,16 @@ const LessonForm = ({
                     <select
                         className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
                         {...register("teacherId")}
-                        defaultValue={type === "create" ? data?.teachers || "" : data?.teachers}
+                        defaultValue={type === "create" ? "" : data?.teacherId || ""}
                     >
                         <option value="" disabled>
                             Select a Teacher
                         </option>
-                        {teachers.map(
-                            (teacher: { id: number; name: string; surname: string }) => (
-                                <option
-                                    value={teacher.id}
-                                    key={teacher.id}
-                                    selected={data && teacher.id === data.teacherId}
-                                >
-                                    {teacher.name}
-                                </option>
-                            )
-                        )}
+                        {teachers.map((teacher: { id: number; name: string; surname: string }) => (
+                            <option key={teacher.id} value={teacher.id}>
+                                {teacher.name} {teacher.surname}
+                            </option>
+                        ))}
                     </select>
                     {errors.teacherId?.message && (
                         <p className="text-xs text-red-400">

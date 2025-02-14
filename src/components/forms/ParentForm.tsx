@@ -39,13 +39,13 @@ const ParentForm = ({
         resolver: zodResolver(parentSchema),
     });
 
-    const [state, formAction] = useActionState(
-        type === "create" ? createParent : updateParent,
-        {
-            success: false,
-            error: false,
-        }
-    );
+    const [state, formAction] = useFormState(
+            type === "create" ? createParent : updateParent,
+            {
+                success: false,
+                error: false,
+            }
+        );
 
     const onSubmit = handleSubmit((data) => {
         startTransition(() => {

@@ -3,11 +3,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
-import { Dispatch, SetStateAction, useState } from "react";
+import {
+  eventSchema,
+  EventSchema,
+} from "@/lib/formValidationSchemas";
+import {
+  createEvent,  
+  updateEvent,
+} from "@/lib/actions";
+import { useFormState } from "react-dom";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { eventSchema, EventSchema } from "@/lib/formValidationSchemas";
-import { createEvent, updateEvent } from "@/lib/actions";
+
 
 const EventForm = ({
     type,
@@ -26,58 +34,56 @@ const EventForm = ({
         formState: { errors },
     } = useForm<EventSchema>({
         resolver: zodResolver(eventSchema),
-        defaultValues: {
-            title: data?.title || "",
-            startTime: data?.startTime || "",
-            endTime: data?.endTime || "",
-            description: data?.description || "",
-            classId: data?.classId || "",
-        },
     });
 
-    const [loading, setLoading] = useState(false);
+    // AFTER REACT 19 IT'LL BE USEACTIONSTATE
+
+    const [state, formAction] = useFormState(
+        type === "create" ? createEvent : updateEvent,
+        {
+            success: false,
+            error: false,
+        }
+    );
+
+    const onSubmit = handleSubmit((data) => {
+        formAction(data);
+    });
+
     const router = useRouter();
-const { userId } = auth(); // ✅ ดึง userId
 
-    const onSubmit = async (formData: EventSchema) => {
-        setLoading(true);
-        try {
-            if (type === "create") {
-                await createEvent(userId, formData); // ✅ ส่ง userId เข้าไปด้วย
-                toast.success("Event created successfully!");
-            } else {
-                await updateEvent(data.id, formData);
-                toast.success("Event updated successfully!");
-            }
-
+    useEffect(() => {
+        if (state.success) {
+            toast(
+                `Event has been ${type === "create" ? "created" : "updated"}!`
+            );
             setOpen(false);
             router.refresh();
-        } catch (error) {
-            console.error(error);
-            toast.error("Something went wrong!");
-        } finally {
-            setLoading(false);
         }
-    };
+    }, [state, router, type, setOpen]);
 
     const { classes } = relatedData;
 
     return (
-        <form className="flex flex-col gap-8" onSubmit={handleSubmit(onSubmit)}>
+        <form className="flex flex-col gap-8" onSubmit={onSubmit}>
             <h1 className="text-xl font-semibold">
-                {type === "create" ? "Create a new event" : "Update the event"}
+                {type === "create"
+                    ? "Create a new event"
+                    : "Update the event"}
             </h1>
 
             <div className="flex justify-between flex-wrap gap-4">
                 <InputField
                     label="Event title"
                     name="title"
+                    defaultValue={data?.title}
                     register={register}
                     error={errors?.title}
                 />
                 <InputField
                     label="Start Date"
                     name="startTime"
+                    defaultValue={data?.startTime}
                     register={register}
                     error={errors?.startTime}
                     type="datetime-local"
@@ -85,6 +91,7 @@ const { userId } = auth(); // ✅ ดึง userId
                 <InputField
                     label="End Date"
                     name="endTime"
+                    defaultValue={data?.endTime}
                     register={register}
                     error={errors?.endTime}
                     type="datetime-local"
@@ -92,6 +99,7 @@ const { userId } = auth(); // ✅ ดึง userId
                 <InputField
                     label="Description"
                     name="description"
+                    defaultValue={data?.description}
                     register={register}
                     error={errors?.description}
                     multiline
@@ -104,6 +112,7 @@ const { userId } = auth(); // ✅ ดึง userId
                     <InputField
                         label="Id"
                         name="id"
+                        defaultValue={data?.id}
                         register={register}
                         error={errors?.id}
                         hidden
@@ -114,11 +123,16 @@ const { userId } = auth(); // ✅ ดึง userId
                     <select
                         className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full max-h-20 overflow-y-auto"
                         {...register("classId")}
+                        defaultValue={
+                            type === "create" ? data?.classes || "" : data?.classes
+                        }
                     >
-                        <option value="">Select a Class</option>
-                        {classes.map((classItem: { id: number; name: string }) => (
-                            <option value={classItem.id} key={classItem.id}>
-                                {classItem.name}
+                        <option value="" disabled>
+                            Select a Class
+                        </option>
+                        {classes.map((classId: { id: number; name: string }) => (
+                            <option value={classId.id} key={classId.id}>
+                                {classId.name}
                             </option>
                         ))}
                     </select>
@@ -129,12 +143,11 @@ const { userId } = auth(); // ✅ ดึง userId
                     )}
                 </div>
             </div>
-            <button
-                type="submit"
-                className="bg-blue-400 text-white p-2 rounded-md"
-                disabled={loading}
-            >
-                {loading ? "Saving..." : type === "create" ? "Create" : "Update"}
+            {state.error && (
+                <span className="text-red-500">Something went wrong!</span>
+            )}
+            <button className="bg-blue-400 text-white p-2 rounded-md">
+                {type === "create" ? "Create" : "Update"}
             </button>
         </form>
     );

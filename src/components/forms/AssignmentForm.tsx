@@ -34,13 +34,13 @@ const AssignmentForm = ({
 
     // AFTER REACT 19 IT'LL BE USEACTIONSTATE
 
-    const [state, formAction] = useActionState(
-        type === "create" ? createAssignment : updateAssignment,
-        {
-            success: false,
-            error: false,
-        }
-    );
+    const [state, formAction] = useFormState(
+            type === "create" ? createAssignment : updateAssignment,
+            {
+                success: false,
+                error: false,
+            }
+        );
 
     const onSubmit = handleSubmit((data) => {
         formAction(data);

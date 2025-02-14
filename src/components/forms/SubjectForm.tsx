@@ -12,7 +12,7 @@ import { subjectSchema, SubjectSchema } from "@/lib/formValidationSchemas";
 
 
 const SubjectForm = ({
-   type,
+  type,
   data,
   setOpen,
   relatedData,
@@ -54,7 +54,7 @@ const SubjectForm = ({
       setOpen(false);
       router.refresh();
     }
-  }, [state,setOpen,router]);
+  }, [state, setOpen, router, type]);
 
   const { teachers} = relatedData;
 

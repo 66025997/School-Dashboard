@@ -3,14 +3,18 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
-import { Dispatch, SetStateAction, useActionState, useEffect } from "react";
+import {
+  announcementSchema,
+  AnnouncementSchema,
+} from "@/lib/formValidationSchemas";
+import {
+  createAnnouncement,  
+  updateAnnouncement,
+} from "@/lib/actions";
+import { useFormState } from "react-dom";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import {
-    announcementSchema,
-    AnnouncementSchema,
-} from "@/lib/formValidationSchemas";
-import { createAnnouncement, updateAnnouncement } from "@/lib/actions";
 
 const AnnouncementForm = ({
     type,
@@ -33,19 +37,19 @@ const AnnouncementForm = ({
 
     // AFTER REACT 19 IT'LL BE USEACTIONSTATE
 
-    const [state, formAction] = useActionState(
-        type === "create" ? createAnnouncement : updateAnnouncement,
-        {
-            success: false,
-            error: false,
-        }
-    );
-
-    const onSubmit = handleSubmit((data) => {
-        formAction(data);
-    });
-
-    const router = useRouter();
+    const [state, formAction] = useFormState(
+            type === "create" ? createAnnouncement : updateAnnouncement,
+            {
+                success: false,
+                error: false,
+            }
+        );
+    
+        const onSubmit = handleSubmit((data) => {
+            formAction(data);
+        });
+    
+        const router = useRouter();
 
     useEffect(() => {
         if (state.success) {

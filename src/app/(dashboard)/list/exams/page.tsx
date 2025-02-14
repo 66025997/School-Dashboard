@@ -24,7 +24,7 @@ const columns = [
     {
         header: "Subject Name",
         accessor: "name",
-        className: [],
+        className: "",
     },
     {
         header: "Class",

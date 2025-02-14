@@ -1,14 +1,13 @@
 "use client";
+
+import dynamic from "next/dynamic";
 import Image from "next/image";
-import {
-    RadialBarChart,
-    RadialBar,
-    Legend,
-    ResponsiveContainer,
-} from "recharts";
+import React from "react";
+import { RadialBar, RadialBarChart, ResponsiveContainer } from "recharts";
 
 
 const CountChart = ({ boys, girls }: { boys: number; girls: number }) => {
+
     const data = [
         {
             name: "Total",
@@ -49,6 +48,6 @@ const CountChart = ({ boys, girls }: { boys: number; girls: number }) => {
             />
         </div>
     );
-};
+}
 
 export default CountChart;

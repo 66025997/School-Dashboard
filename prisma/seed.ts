@@ -2,7 +2,20 @@ import { Day, PrismaClient, UserSex } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  
+  // ADMIN
+  await prisma.admin.create({
+    data: {
+      id: "admin1",
+      username: "admin1",
+    },
+  });
+  await prisma.admin.create({
+    data: {
+      id: "admin2",
+      username: "admin2",
+    },
+  });
+
   // GRADE
   for (let i = 1; i <= 6; i++) {
     await prisma.grade.create({
@@ -62,7 +75,7 @@ async function main() {
   }
 
   // LESSON
-  for (let i = 1; i <= 30; i++) {
+  for (let i = 1; i <= 20; i++) {
     await prisma.lesson.create({
       data: {
         name: `Lesson${i}`, 
@@ -81,7 +94,7 @@ async function main() {
   }
 
   // PARENT
-  for (let i = 1; i <= 25; i++) {
+  for (let i = 1; i <= 15; i++) {
     await prisma.parent.create({
       data: {
         id: `parentId${i}`,
@@ -96,7 +109,7 @@ async function main() {
   }
 
   // STUDENT
-  for (let i = 1; i <= 50; i++) {
+  for (let i = 1; i <= 30; i++) {
     await prisma.student.create({
       data: {
         id: `student${i}`, 
@@ -164,7 +177,7 @@ async function main() {
   }
 
   // EVENT
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 3; i++) {
     await prisma.event.create({
       data: {
         title: `Event ${i}`, 

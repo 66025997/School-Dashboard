@@ -12,7 +12,7 @@ import FormContainer from "@/components/FormContainer";
 
 const { userId, sessionClaims } = await auth();
 const role = (sessionClaims?.metadata as { role?: string })?.role;
-const currentUserId=userId;
+const currentUserId = userId;
 
 type EventList = Event & { class: Class };
 
@@ -20,7 +20,7 @@ const columns = [
   {
     header: "Title",
     accessor: "title",
-    className: "",
+    className: [],
   },
   {
     header: "Class",
@@ -43,12 +43,12 @@ const columns = [
   },
   ...(role === "admin"
     ? [
-        {
-          header: "Actions",
-          accessor: "actions",
-          className: "",
-        },
-      ]
+      {
+        header: "Actions",
+        accessor: "actions",
+        className: [],
+      },
+    ]
     : []),
 ];
 
@@ -93,7 +93,7 @@ const EventListPage = async ({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
-  const { page, ...queryParams } =await searchParams;
+  const { page, ...queryParams } = await searchParams;
   const p = page ? parseInt(page) : 1;
 
   // URL  PARAMS CONDITION
@@ -120,8 +120,8 @@ const EventListPage = async ({
     parent: { students: { some: { parentId: currentUserId! } } },
   };
 
-  query.OR=[
-    {classId :null},
+  query.OR = [
+    { classId: null },
     {
       class: roleConditions[role as keyof typeof roleConditions] || {},
     },
@@ -144,7 +144,7 @@ const EventListPage = async ({
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       {/* TOP */}
       <div className="flex items-center justify-between">
-        <h1 className="hidden md:block text-lg font-semibold">All Events</h1>
+        <h1 className="hidden md:block text-lg text-semibold">All Events</h1>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
           <div className="flex items-center gap-4 self-end">

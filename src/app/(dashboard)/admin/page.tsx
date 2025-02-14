@@ -3,6 +3,7 @@ import Announcements from "@/components/Announcements";
 import CountChartContainer from "@/components/CountChartContainer";
 import AttendanceChartContainer from "@/components/AttendanceChartContainer";
 import EventCalendarContainer from "@/components/EventCalendarContainer";
+import React from "react";
 
 const AdminPage = ({
     searchParams,

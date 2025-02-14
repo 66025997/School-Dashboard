@@ -1,166 +1,141 @@
-import FormModal from "@/components/FormModal";
-import Pagination from "@/components/Pagination";
-import Table from "@/components/Table";
-import TableSearch from "@/components/TableSearch";
+"use client";
 
-import prisma from "@/lib/prisma";
-import { ITEM_PER_PAGE } from "@/lib/settings";
-import { currentUserId, role } from "@/lib/utils";
-import { Class, Prisma } from "@prisma/client";
-import Image from "next/image";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
-type EventList = Event & { id: string; class: Class; title: string; startTime: Date; endTime: Date }
+// จำลอง API (ให้ใช้ API จริงแทนที่ fetchData ด้านล่าง)
+const fetchClasses = async () => {
+    return [
+        { id: 1, name: "Class 1A" },
+        { id: 2, name: "Class 2B" },
+        { id: 3, name: "Class 3C" },
+    ];
+};
 
-const columns = [
-    {
-        header: "Title",
-        accessor: "title",
-    },
-    {
-        header: "Class",
-        accessor: "class",
-    },
-    {
-        header: "Date",
-        accessor: "date",
-        className: "hidden md:table-cell",
-    },
-    {
-        header: "Start Time",
-        accessor: "startTime",
-        className: "hidden md:table-cell",
-    },
-    {
-        header: "End Time",
-        accessor: "endTime",
-        className: "hidden md:table-cell",
-    },
-    ...(role === "admin"
-        ? [
-            {
-                header: "Actions",
-                accessor: "action",
-            },
-        ]
-        : []),
-];
+const fetchStudentsByClass = async (classId: number) => {
+    const allStudents = {
+        1: [
+            { id: "s1", name: "Alice Johnson" },
+            { id: "s2", name: "Bob Smith" },
+        ],
+        2: [
+            { id: "s3", name: "Charlie Brown" },
+            { id: "s4", name: "David Wilson" },
+        ],
+        3: [
+            { id: "s5", name: "Emma Davis" },
+            { id: "s6", name: "Frank Thomas" },
+        ],
+    };
+    return allStudents[classId] || [];
+};
 
-const renderRow = (item: EventList) => (
-    <tr
-        key={item.id}
-        className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-NPurpleLight"
-    >
-        <td className="flex items-center gap-4 p-4">{item.title}</td>
-        <td>{item.class?.name || "-"}</td>
-        <td className="hidden md:table-cell">
-            {new Intl.DateTimeFormat("en-SG").format(item.startTime)}
-        </td>
-        <td className="hidden md:table-cell">
-            {item.startTime.toLocaleTimeString("en-SG", {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false,
-            })}
-        </td>
-        <td className="hidden md:table-cell">
-            {item.endTime.toLocaleTimeString("en-SG", {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false,
-            })}
-        </td>
-        <td>
-            <div className="flex items-center gap-2">
-                {role === "admin" && (
-                    <>
-                        <FormModal table="event" type="update" data={item} />
-                        <FormModal table="event" type="delete" id={item.id} />
-                    </>
-                )}
-            </div>
-        </td>
-    </tr>
-);
+const AttendancePage = () => {
+    const [classes, setClasses] = useState<{ id: number; name: string }[]>([]);
+    const [selectedClass, setSelectedClass] = useState<number | null>(null);
+    const [students, setStudents] = useState<{ id: string; name: string }[]>([]);
+    const [attendance, setAttendance] = useState<{ [key: string]: boolean }>({});
 
-const AttendanceListPage = async ({
-    searchParams,
-}: {
-    searchParams: { [key: string]: string | undefined }
-}) => {
+    // โหลดข้อมูลคลาส
+    useEffect(() => {
+        const loadClasses = async () => {
+            const classData = await fetchClasses();
+            setClasses(classData);
+            if (classData.length > 0) setSelectedClass(classData[0].id);
+        };
+        loadClasses();
+    }, []);
 
-    const { page, ...queryParams } = searchParams;
+    // โหลดนักเรียนเมื่อเลือกคลาส
+    useEffect(() => {
+        if (selectedClass) {
+            const loadStudents = async () => {
+                const studentData = await fetchStudentsByClass(selectedClass);
+                setStudents(studentData);
 
-    const p = page ? parseInt(page) : 1;
+                // ตั้งค่าเช็คชื่อเริ่มต้นเป็น false
+                const initialAttendance = studentData.reduce((acc, student) => {
+                    acc[student.id] = false;
+                    return acc;
+                }, {} as { [key: string]: boolean });
 
-    // URL PARAMS CONDITION
-
-    const query: Prisma.EventWhereInput = {};
-
-    if (queryParams) {
-        for (const [key, value] of Object.entries(queryParams)) {
-            if (value !== undefined) {
-                switch (key) {
-                    case "search":
-                        query.title = { contains: value, mode: "insensitive" };
-                        break;
-                    default:
-                        break;
-                }
-            }
+                setAttendance(initialAttendance);
+            };
+            loadStudents();
         }
-    }
+    }, [selectedClass]);
 
-    // ROLE CONDITIONS
-
-    const roleConditions = {
-        teacher: { lessons: { some: { teacherId: currentUserId! } } },
-        student: { students: { some: { id: currentUserId! } } },
-        parent: { students: { some: { parentId: currentUserId! } } },
+    // อัปเดตสถานะการเช็คชื่อ
+    const handleAttendanceChange = (studentId: string) => {
+        setAttendance((prev) => ({
+            ...prev,
+            [studentId]: !prev[studentId],
+        }));
     };
 
-    query.OR = [{ classId: null },
-    {
-        class: roleConditions[role as keyof typeof roleConditions] || {},
-    },
-    ];
-
-    const [data, count] = await prisma.$transaction([
-        prisma.event.findMany({
-            where: query,
-            include: {
-                class: true,
-            },
-            take: ITEM_PER_PAGE,
-            skip: ITEM_PER_PAGE * (p - 1),
-        }),
-        prisma.event.count({ where: query }),
-    ]);
-
+    // บันทึกข้อมูลการเช็คชื่อ
+    const handleSaveAttendance = async () => {
+        try {
+            console.log("Saving Attendance:", attendance);
+            toast.success("Attendance saved successfully!");
+        } catch (error) {
+            console.error("Failed to save attendance", error);
+            toast.error("Failed to save attendance!");
+        }
+    };
 
     return (
-        <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
-            {/* TOP */}
-            <div className="flex items-center justify-between">
-                <h1 className="hidden md:block text-lg font-semibold">All Attendance</h1>
-                <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-                    <TableSearch />
-                    <div className="flex items-center gap-4 self-end">
-                        <button className="w-8 h-8 flex items-center justify-center rounded-full bg-NYellow">
-                            <Image src="/filter.png" alt="" width={14} height={14} />
-                        </button>
-                        <button className="w-8 h-8 flex items-center justify-center rounded-full bg-NYellow">
-                            <Image src="/sort.png" alt="" width={14} height={14} />
-                        </button>
-                        {role === "admin" && <FormModal table="event" type="create" />}
-                    </div>
-                </div>
-            </div>
-            {/* LIST */}
-            <Table columns={columns} renderRow={renderRow} data={data} />
-            {/* PAGINATION */}
-            <Pagination page={p} count={count} />
+        <div className="p-6 max-w-4xl mx-auto">
+            <h1 className="text-2xl font-semibold mb-4">Attendance Check</h1>
+
+            {/* Dropdown เลือกคลาส */}
+            <label className="block text-lg font-medium mb-2">Select Class</label>
+            <select
+                value={selectedClass || ""}
+                onChange={(e) => setSelectedClass(Number(e.target.value))}
+                className="w-full p-2 border rounded-md mb-4"
+            >
+                {classes.map((cls) => (
+                    <option key={cls.id} value={cls.id}>
+                        {cls.name}
+                    </option>
+                ))}
+            </select>
+
+            {/* ตารางเช็คชื่อ */}
+            <table className="w-full border-collapse border border-gray-300">
+                <thead>
+                    <tr className="bg-gray-100">
+                        <th className="border p-2 text-left">Student Name</th>
+                        <th className="border p-2 text-center">Present</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {students.map((student) => (
+                        <tr key={student.id} className="border">
+                            <td className="border p-2">{student.name}</td>
+                            <td className="border p-2 text-center">
+                                <input
+                                    type="checkbox"
+                                    checked={attendance[student.id] || false}
+                                    onChange={() => handleAttendanceChange(student.id)}
+                                    className="w-5 h-5"
+                                />
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            {/* ปุ่มบันทึก */}
+            <button
+                onClick={handleSaveAttendance}
+                className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md"
+            >
+                Save Attendance
+            </button>
         </div>
     );
 };
 
-export default AttendanceListPage;
+export default AttendancePage;

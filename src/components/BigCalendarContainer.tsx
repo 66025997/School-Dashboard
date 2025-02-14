@@ -17,7 +17,7 @@ const BigCalendarContainer = async ({
         },
     });
 
-    const data = dataRes.map((lesson) => ({
+    const data = dataRes.map(lesson => ({
         title: lesson.name,
         start: lesson.startTime,
         end: lesson.endTime,
@@ -25,11 +25,7 @@ const BigCalendarContainer = async ({
 
     const schedule = adjustScheduleToCurrentWeek(data);
 
-    return (
-        <div className="">
-            <BigCalendar data={schedule} />
-        </div>
-    );
+    return <div className=""><BigCalendar data={schedule} /></div>
 };
 
 export default BigCalendarContainer;

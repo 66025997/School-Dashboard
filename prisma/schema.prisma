@@ -25,7 +25,7 @@ model Student {
   sex         UserSex
   createdAt   DateTime     @default(now())
   parentId    String
-  parent      Parent       @relation(fields: [parentId], references: [id])
+  parent      Parent       @relation(fields: [parentId], references: [id], onDelete:Cascade)
   classId     Int
   class       Class        @relation(fields: [classId], references: [id])
   gradeId     Int

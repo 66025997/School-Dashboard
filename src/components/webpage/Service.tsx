@@ -15,7 +15,7 @@ export default function Service() {
   };
 
   return (
-    <div className="relative flex items-center bg-Bisque p-6 rounded-lg shadow-lg">
+    <div className="relative flex items-center bg-blue-100 p-6 rounded-lg shadow-lg">
       <div className="w-1/2">
         <img src="Webpage/back to school.jpg" alt="Main visual" className="w-full h-auto rounded-lg shadow-md" />
       </div>

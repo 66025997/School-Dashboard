@@ -7,7 +7,7 @@ const Webpage: React.FC<Props> = () => {
   return (
     <div className="bg-gray-100">
       {/* Header Section */}
-      <header className="bg-white shadow">
+      <header className="bg-blue-400 shadow">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center">
             <img src="logo.png" alt="School Dashboard Logo" className="h-12" />
@@ -15,9 +15,9 @@ const Webpage: React.FC<Props> = () => {
           </div>
           <div>
             <ul className="flex space-x-4 text-gray-600">
-              <li><a href="#" className="hover:text-blue-600">Dashboard</a></li>
-              <li><a href="#" className="hover:text-blue-600">Resources</a></li>
-              <li><a href="#" className="hover:text-blue-600">Contact</a></li>
+              <li><a href="#" className="hover:text-white">Dashboard</a></li>
+              <li><a href="#" className="hover:text-white">Resources</a></li>
+              <li><a href="#" className="hover:text-white">Contact</a></li>
             </ul>
           </div>
         </div>
@@ -31,7 +31,7 @@ const Webpage: React.FC<Props> = () => {
         </div>
       </section>
 
-      <section className="py-12 bg-white">
+      <section className="py-12 bg-blue-100">
         <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
             <img src="Webpage/Academics.jpg" alt="Academics" className="mx-auto mb-4 rounded-md shadow-md" />
@@ -48,14 +48,14 @@ const Webpage: React.FC<Props> = () => {
         </div>
       </section>
 
-      <section className="py-12 bg-gray-100">
+      <section className="py-12 bg-blue-200">
         <div className="container mx-auto px-6 text-center">
           <h3 className="text-2xl font-bold mb-4">About the Dashboard</h3>
           <p className="text-gray-600 max-w-2xl mx-auto">The School Dashboard is designed to provide essential tools and resources, connecting students, parents, and teachers in a collaborative environment.</p>
         </div>
       </section>
 
-      <section className="py-12 bg-white">
+      <section className="py-12 bg-blue-100">
         <div className="container mx-auto px-6 text-center">
           <blockquote className="text-lg italic text-gray-700 max-w-xl mx-auto">
             "The School Dashboard is a powerful platform designed to provide not only essential academic tools and resources but also to foster a sense of connection and growth within the school community. It equips students, parents, and teachers with the necessary tools to succeed academically while supporting the holistic development of individuals in an environment of collaboration and shared values."
@@ -64,7 +64,7 @@ const Webpage: React.FC<Props> = () => {
         </div>
       </section>
 
-      <section className="py-12 bg-gray-100">
+      <section className="py-12 bg-blue-300">
         <div className="container mx-auto px-6">
           <h3 className="text-2xl font-bold text-center mb-6">News and Updates</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -86,7 +86,7 @@ const Webpage: React.FC<Props> = () => {
 
       <Service />
 
-      <footer className="bg-gray-800 text-white py-8">
+      <footer className="bg-blue-950 text-white py-8">
         <div className="container mx-auto px-6">
           <div className="flex justify-between items-center">
             <p className="text-sm">&copy; School Dashboard 2025. All Rights Reserved.</p>

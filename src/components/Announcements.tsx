@@ -22,8 +22,7 @@ const Announcements = async () => {
                 ],
             }),
         },
-    });
-
+    });    
 
 
     return (

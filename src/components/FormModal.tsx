@@ -8,7 +8,7 @@ import {
   deleteExam,
   deleteLesson,
   deleteParent,
-  // deleteResult,
+  deleteResult,
   deleteStudent,
   deleteSubject,
   deleteTeacher,
@@ -38,7 +38,7 @@ const deleteActionMap: { [key: string]: (currentState: any, data: any) => Promis
   parent: deleteParent,
   lesson: deleteLesson,
   event: deleteEvent,
-  // result: deleteResult,
+  result: deleteResult,
   // TODO: OTHER DELETE ACTIONS
   attendance: deleteSubject,
 };

@@ -9,94 +9,19 @@ import { Class, Event, Prisma } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
 import FormContainer from "@/components/FormContainer";
 
-const { userId, sessionClaims } = await auth();
-const role = (sessionClaims?.metadata as { role?: string })?.role;
-const currentUserId = userId;
-
-type EventList = Event & { class: Class };
-
-const columns = [
-  {
-    header: "Title",
-    accessor: "title",
-    className: "",
-  },
-  {
-    header: "Class",
-    accessor: "class",
-  },
-  {
-    header: "Date",
-    accessor: "date",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "Start Time",
-    accessor: "startTime",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "End Time",
-    accessor: "endTime",
-    className: "hidden md:table-cell",
-  },
-  ...(role === "admin"
-    ? [
-      {
-        header: "Actions",
-        accessor: "actions",
-        className: "",
-      },
-    ]
-    : []),
-];
-
-const renderRow = (item: EventList) => (
-  <tr
-    key={item.id}
-    className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-NPurpleLight"
-  >
-    <td className="flex items-center gap-4 p-4">{item.title}</td>
-    <td>{item.class?.name || "-"}</td>
-    <td className="hidden md:table-cell">
-      {new Intl.DateTimeFormat("en-SG").format(item.startTime)}
-    </td>
-    <td className="hidden md:table-cell">
-      {item.startTime.toLocaleTimeString("en-SG", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      })}
-    </td>
-    <td className="hidden md:table-cell">
-      {item.endTime.toLocaleTimeString("en-SG", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      })}{" "}
-    </td>
-    <td>
-      <div className="flex items-center gap-2">
-        {role === "admin" && (
-          <>
-            <FormContainer table="event" type="update" data={item} />
-            <FormContainer table="event" type="delete" id={item.id} />
-          </>
-        )}
-      </div>
-    </td>
-  </tr>
-);
 const EventListPage = async ({
   searchParams,
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
-  const { page, ...queryParams } = await searchParams;
+  const { userId, sessionClaims } = await auth();
+  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const currentUserId = userId;
+
+  const { page, ...queryParams } = searchParams;
   const p = page ? parseInt(page) : 1;
 
-  // URL  PARAMS CONDITION
-
+  // URL PARAMS CONDITION
   const query: Prisma.EventWhereInput = {};
 
   if (queryParams) {
@@ -112,20 +37,22 @@ const EventListPage = async ({
       }
     }
   }
+
   // ROLE CONDITIONS
-  const roleConditions = {
-    teacher: { lessons: { some: { teacherId: currentUserId! } } },
-    student: { students: { some: { id: currentUserId! } } },
-    parent: { students: { some: { parentId: currentUserId! } } },
-  };
+  if (role !== "admin") {
+    const roleConditions = {
+      teacher: { lessons: { some: { teacherId: currentUserId! } } },
+      student: { students: { some: { id: currentUserId! } } },
+      parent: { students: { some: { parentId: currentUserId! } } },
+    };
 
-  query.OR = [
-    { classId: null },
-    {
-      class: roleConditions[role as keyof typeof roleConditions] || {},
-    },
-  ]
-
+    query.OR = [
+      { classId: null },
+      {
+        class: roleConditions[role as keyof typeof roleConditions] || {},
+      },
+    ];
+  }
 
   const [data, count] = await prisma.$transaction([
     prisma.event.findMany({
@@ -133,11 +60,87 @@ const EventListPage = async ({
       include: {
         class: true,
       },
+      orderBy: { startTime: "desc" },
       take: ITEM_PER_PAGE,
       skip: ITEM_PER_PAGE * (p - 1),
     }),
     prisma.event.count({ where: query }),
   ]);
+
+  // console.log("Fetched Events:", data);
+
+  const columns = [
+    {
+      header: "Title",
+      accessor: "title",
+      className: "",
+    },
+    {
+      header: "Class",
+      accessor: "class",
+    },
+    {
+      header: "Date",
+      accessor: "date",
+      className: "hidden md:table-cell",
+    },
+    {
+      header: "Start Time",
+      accessor: "startTime",
+      className: "hidden md:table-cell",
+    },
+    {
+      header: "End Time",
+      accessor: "endTime",
+      className: "hidden md:table-cell",
+    },
+    ...(role === "admin"
+      ? [
+          {
+            header: "Actions",
+            accessor: "actions",
+            className: "",
+          },
+        ]
+      : []),
+  ];
+
+  const renderRow = (item: Event & { class: Class }) => (
+    <tr
+      key={item.id}
+      className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-NPurpleLight"
+    >
+      <td className="flex items-center gap-4 p-4">{item.title}</td>
+      <td>{item.class?.name || "-"}</td>
+      <td className="hidden md:table-cell">
+        {new Intl.DateTimeFormat("en-SG").format(new Date(item.startTime))}
+      </td>
+      <td className="hidden md:table-cell">
+        {new Date(item.startTime).toLocaleTimeString("en-SG", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })}
+      </td>
+      <td className="hidden md:table-cell">
+        {new Date(item.endTime).toLocaleTimeString("en-SG", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })}
+      </td>
+      <td>
+        <div className="flex items-center gap-2">
+          {role === "admin" && (
+            <>
+              <FormContainer table="event" type="update" data={item} />
+              <FormContainer table="event" type="delete" id={item.id} />
+            </>
+          )}
+        </div>
+      </td>
+    </tr>
+  );
 
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
@@ -159,7 +162,7 @@ const EventListPage = async ({
       </div>
       {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={data} />
-      {/* PAGINTATION */}
+      {/* PAGINATION */}
       <Pagination page={p} count={count} />
     </div>
   );

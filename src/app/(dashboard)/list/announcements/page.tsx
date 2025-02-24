@@ -9,68 +9,19 @@ import { Announcement, Class, Prisma } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
 import FormContainer from "@/components/FormContainer";
 
-const { userId, sessionClaims } = await auth();
-const role = (sessionClaims?.metadata as { role?: string })?.role;
-const currentUserId=userId;
-
-
-type AnnouncementList = Announcement & { class: Class };
-
-const columns = [
-  {
-    header: "Title",
-    accessor: "title",
-    className: "",
-  },
-  {
-    header: "Class",
-    accessor: "class",
-  },
-  {
-    header: "Date",
-    accessor: "date",
-    className: "hidden md:table-cell",
-  },
-  ...(role==="admin" ? [{
-    header: "Actions",
-    accessor: "actions",
-    className: "",
-  }]:[]),
-];
-
-const renderRow = (item: AnnouncementList) => (
-  <tr
-    key={item.id}
-    className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-smPurpleLight"
-  >
-    <td className="flex items-center gap-4 p-4">{item.title}</td>
-    <td>{item.class?.name || "-"}</td>
-    <td className="hidden md:table-cell">
-      {new Intl.DateTimeFormat("en-US").format(item.date)}
-    </td>
-    <td>
-      <div className="flex items-center gap-2">
-        {role === "admin" && (
-          <>
-            <FormContainer table="announcement" type="update" data={item} />
-            <FormContainer table="announcement" type="delete" id={item.id} />
-          </>
-        )}
-      </div>
-    </td>
-  </tr>
-);
-
 const AnnouncementListPage = async ({
   searchParams,
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
-  const { page, ...queryParams } =await searchParams;
+  const { userId, sessionClaims } = await auth();
+  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const currentUserId = userId;
+
+  const { page, ...queryParams } = searchParams;
   const p = page ? parseInt(page) : 1;
 
-  // URL  PARAMS CONDITION
-
+  // URL PARAMS CONDITION
   const query: Prisma.AnnouncementWhereInput = {};
 
   if (queryParams) {
@@ -88,19 +39,20 @@ const AnnouncementListPage = async ({
   }
 
   // ROLE CONDITIONS
+  if (role !== "admin") {
     const roleConditions = {
       teacher: { lessons: { some: { teacherId: currentUserId! } } },
       student: { students: { some: { id: currentUserId! } } },
       parent: { students: { some: { parentId: currentUserId! } } },
     };
-  
-    query.OR=[
-      {classId :null},
+
+    query.OR = [
+      { classId: null },
       {
         class: roleConditions[role as keyof typeof roleConditions] || {},
       },
-    ]
-  
+    ];
+  }
 
   const [data, count] = await prisma.$transaction([
     prisma.announcement.findMany({
@@ -108,11 +60,63 @@ const AnnouncementListPage = async ({
       include: {
         class: true,
       },
+      orderBy: { date: "desc" },
       take: ITEM_PER_PAGE,
       skip: ITEM_PER_PAGE * (p - 1),
     }),
     prisma.announcement.count({ where: query }),
   ]);
+
+  // console.log("Fetched Announcements:", data);
+
+  const columns = [
+    {
+      header: "Title",
+      accessor: "title",
+      className: "",
+    },
+    {
+      header: "Class",
+      accessor: "class",
+    },
+    {
+      header: "Date",
+      accessor: "date",
+      className: "hidden md:table-cell",
+    },
+    ...(role === "admin"
+      ? [
+          {
+            header: "Actions",
+            accessor: "actions",
+            className: "",
+          },
+        ]
+      : []),
+  ];
+
+  const renderRow = (item: Announcement & { class: Class }) => (
+    <tr
+      key={item.id}
+      className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-smPurpleLight"
+    >
+      <td className="flex items-center gap-4 p-4">{item.title}</td>
+      <td>{item.class?.name || "-"}</td>
+      <td className="hidden md:table-cell">
+        {new Intl.DateTimeFormat("en-US").format(new Date(item.date))}
+      </td>
+      <td>
+        <div className="flex items-center gap-2">
+          {role === "admin" && (
+            <>
+              <FormContainer table="announcement" type="update" data={item} />
+              <FormContainer table="announcement" type="delete" id={item.id} />
+            </>
+          )}
+        </div>
+      </td>
+    </tr>
+  );
 
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
@@ -136,7 +140,7 @@ const AnnouncementListPage = async ({
       </div>
       {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={data} />
-      {/* PAGINTATION */}
+      {/* PAGINATION */}
       <Pagination page={p} count={count} />
     </div>
   );

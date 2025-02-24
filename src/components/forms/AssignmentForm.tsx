@@ -13,6 +13,12 @@ import {
 } from "@/lib/formValidationSchemas";
 import { createAssignment, updateAssignment } from "@/lib/actions";
 
+const formatDateForInput = (date: string | Date) => {
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return "";
+    return d.toISOString().slice(0, 16);
+};
+
 const AssignmentForm = ({
     type,
     data,
@@ -32,15 +38,13 @@ const AssignmentForm = ({
         resolver: zodResolver(assignmentSchema),
     });
 
-    // AFTER REACT 19 IT'LL BE USEACTIONSTATE
-
     const [state, formAction] = useFormState(
-            type === "create" ? createAssignment : updateAssignment,
-            {
-                success: false,
-                error: false,
-            }
-        );
+        type === "create" ? createAssignment : updateAssignment,
+        {
+            success: false,
+            error: false,
+        }
+    );
 
     const onSubmit = handleSubmit((data) => {
         formAction(data);
@@ -78,7 +82,7 @@ const AssignmentForm = ({
                 <InputField
                     label="Start Date"
                     name="startTime"
-                    defaultValue={data?.startDate}
+                    defaultValue={formatDateForInput(data?.startDate)}
                     register={register}
                     error={errors?.startDate}
                     type="datetime-local"
@@ -86,7 +90,7 @@ const AssignmentForm = ({
                 <InputField
                     label="Due Date"
                     name="dueDate"
-                    defaultValue={data?.dueDate}
+                    defaultValue={formatDateForInput(data?.dueDate)}
                     register={register}
                     error={errors?.dueDate}
                     type="datetime-local"

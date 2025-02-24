@@ -8,7 +8,7 @@ import {
   deleteExam,
   deleteLesson,
   deleteParent,
-  deleteResult,
+  // deleteResult,
   deleteStudent,
   deleteSubject,
   deleteTeacher,
@@ -27,7 +27,7 @@ import { toast } from "react-toastify";
 import { FormContainerProps } from "./FormContainer";
 import { useFormState } from "react-dom";
 
-const deleteActionMap = {
+const deleteActionMap: { [key: string]: (currentState: any, data: any) => Promise<{ success: boolean; error: boolean }> } = {
   subject: deleteSubject,
   class: deleteClass,
   teacher: deleteTeacher,
@@ -38,7 +38,7 @@ const deleteActionMap = {
   parent: deleteParent,
   lesson: deleteLesson,
   event: deleteEvent,
-  result: deleteResult,
+  // result: deleteResult,
   // TODO: OTHER DELETE ACTIONS
   attendance: deleteSubject,
 };

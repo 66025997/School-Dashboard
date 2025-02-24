@@ -3,7 +3,6 @@ import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import Image from "next/image";
 import React from "react";
-import FormModal from "@/components/FormModal";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Class, Event, Prisma } from "@prisma/client";
@@ -20,7 +19,7 @@ const columns = [
   {
     header: "Title",
     accessor: "title",
-    className: [],
+    className: "",
   },
   {
     header: "Class",
@@ -46,7 +45,7 @@ const columns = [
       {
         header: "Actions",
         accessor: "actions",
-        className: [],
+        className: "",
       },
     ]
     : []),
@@ -60,17 +59,17 @@ const renderRow = (item: EventList) => (
     <td className="flex items-center gap-4 p-4">{item.title}</td>
     <td>{item.class?.name || "-"}</td>
     <td className="hidden md:table-cell">
-      {new Intl.DateTimeFormat("en-US").format(item.startTime)}
+      {new Intl.DateTimeFormat("en-SG").format(item.startTime)}
     </td>
     <td className="hidden md:table-cell">
-      {item.startTime.toLocaleTimeString("en-US", {
+      {item.startTime.toLocaleTimeString("en-SG", {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
       })}
     </td>
     <td className="hidden md:table-cell">
-      {item.endTime.toLocaleTimeString("en-US", {
+      {item.endTime.toLocaleTimeString("en-SG", {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
@@ -154,7 +153,7 @@ const EventListPage = async ({
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-NYellow">
               <Image src="/sort.png" alt="" width={14} height={14} />
             </button>
-            <FormContainer table="event" type="create" />
+            {role === "admin" && <FormContainer table="event" type="create" />}
           </div>
         </div>
       </div>

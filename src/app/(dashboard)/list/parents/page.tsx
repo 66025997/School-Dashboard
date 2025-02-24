@@ -20,7 +20,7 @@ const columns = [
   {
     header: "info",
     accessor: "info",
-    className: [],
+    className: "",
   },
   {
     header: "Student Names",
@@ -42,7 +42,7 @@ const columns = [
       {
         header: "Actions",
         accessor: "actions",
-        className: [],
+        className: "",
       },
     ]
     : []),
@@ -129,7 +129,7 @@ const ParentsListPage = async ({
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-NYellow">
               <Image src="/sort.png" alt="" width={14} height={14} />
             </button>
-            <FormContainer table="parent" type="create" />
+            {role==="admin" && (<FormContainer table="parent" type="create" />)}
           </div>
         </div>
       </div>

@@ -3,7 +3,6 @@ import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import Image from "next/image";
 import React from "react";
-import FormModal from "@/components/FormModal";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import prisma from "@/lib/prisma";
 import { Announcement, Class, Prisma } from "@prisma/client";
@@ -35,7 +34,7 @@ const columns = [
   ...(role==="admin" ? [{
     header: "Actions",
     accessor: "actions",
-    className: [],
+    className: "",
   }]:[]),
 ];
 

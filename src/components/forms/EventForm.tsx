@@ -4,12 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
 import {
-  eventSchema,
-  EventSchema,
+    eventSchema,
+    EventSchema,
 } from "@/lib/formValidationSchemas";
 import {
-  createEvent,  
-  updateEvent,
+    createEvent,
+    updateEvent,
 } from "@/lib/actions";
 import { useFormState } from "react-dom";
 import { Dispatch, SetStateAction, useEffect } from "react";

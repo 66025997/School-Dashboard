@@ -153,16 +153,16 @@ async function main() {
     });
   }
 
-  // RESULT
-  for (let i = 1; i <= 10; i++) {
-    await prisma.result.create({
-      data: {
-        score: 90, 
-        studentId: `student${i}`, 
-        ...(i <= 5 ? { examId: i } : { assignmentId: i - 5 }), 
-      },
-    });
-  }
+  // // RESULT
+  // for (let i = 1; i <= 10; i++) {
+  //   await prisma.result.create({
+  //     data: {
+  //       score: 90, 
+  //       studentId: `student${i}`, 
+  //       ...(i <= 5 ? { examId: i } : { assignmentId: i - 5 }), 
+  //     },
+  //   });
+  // }
 
   // ATTENDANCE
   for (let i = 1; i <= 10; i++) {

@@ -27,7 +27,7 @@ const columns = [
     {
         header: "Subject Name",
         accessor: "name",
-        className: [],
+        className: "",
     },
     {
         header: "Class",
@@ -46,7 +46,7 @@ const columns = [
     ...(role === "admin" || role === "teacher" ? [{
         header: "Actions",
         accessor: "actions",
-        className: [],
+        className: "",
     }] : []),
 ];
 

@@ -45,7 +45,7 @@ const columns = [
             {
                 header: "Actions",
                 accessor: "actions",
-                className: [],
+                className: "",
             },
         ]
         : []),
@@ -62,7 +62,7 @@ const renderRow = (item: ExamList) => (
             {item.lesson.teacher.name + " " + item.lesson.teacher.surname}
         </td>
         <td className="hidden md:table-cell">
-            {new Intl.DateTimeFormat("en-US").format(item.startTime)}
+            {new Intl.DateTimeFormat("en-SG").format(item.startTime)}
         </td>
         <td>
             <div className="flex items-center gap-2">

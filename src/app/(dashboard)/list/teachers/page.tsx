@@ -21,7 +21,7 @@ const columns = [
   {
     header: "info",
     accessor: "info",
-    className: [],
+    className: "",
   },
   {
     header: "Teacher ID",
@@ -53,7 +53,7 @@ const columns = [
         {
           header: "Actions",
           accessor: "actions",
-          className: [],
+          className: "",
         },
       ]
     : []),

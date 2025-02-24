@@ -130,7 +130,6 @@ const forms: {
       setOpen={setOpen}
       relatedData={relatedData}
     />
-    // TODO OTHER LIST ITEMS
   ),
   assignment: (setOpen, type, data, relatedData) => (
     <AssignmentForm
@@ -139,7 +138,6 @@ const forms: {
       setOpen={setOpen}
       relatedData={relatedData}
     />
-    // TODO OTHER LIST ITEMS
   ),
   parent: (setOpen, type, data, relatedData) => (
     <ParentForm

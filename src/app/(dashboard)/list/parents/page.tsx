@@ -3,7 +3,6 @@ import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import React from "react";
 import Image from "next/image";
-import FormModal from "@/components/FormModal";
 import { Parent, Prisma, Student } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";

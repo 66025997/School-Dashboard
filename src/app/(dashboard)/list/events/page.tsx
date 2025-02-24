@@ -39,9 +39,8 @@ const EventListPage = async ({
   }
 
   // ROLE CONDITIONS
-  if (role !== "admin") {
+  if (role !== "admin" && role !== "teacher") {
     const roleConditions = {
-      teacher: { lessons: { some: { teacherId: currentUserId! } } },
       student: { students: { some: { id: currentUserId! } } },
       parent: { students: { some: { parentId: currentUserId! } } },
     };
@@ -53,6 +52,7 @@ const EventListPage = async ({
       },
     ];
   }
+
 
   const [data, count] = await prisma.$transaction([
     prisma.event.findMany({
@@ -96,12 +96,12 @@ const EventListPage = async ({
     },
     ...(role === "admin"
       ? [
-          {
-            header: "Actions",
-            accessor: "actions",
-            className: "",
-          },
-        ]
+        {
+          header: "Actions",
+          accessor: "actions",
+          className: "",
+        },
+      ]
       : []),
   ];
 
@@ -113,7 +113,7 @@ const EventListPage = async ({
       <td className="flex items-center gap-4 p-4">{item.title}</td>
       <td>{item.class?.name || "-"}</td>
       <td className="hidden md:table-cell">
-        {new Intl.DateTimeFormat("en-SG").format(new Date(item.startTime))}
+        {new Intl.DateTimeFormat("en-TH").format(new Date(item.startTime))}
       </td>
       <td className="hidden md:table-cell">
         {new Date(item.startTime).toLocaleTimeString("en-SG", {

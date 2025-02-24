@@ -4,7 +4,6 @@ import TableSearch from "@/components/TableSearch";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import FormModal from "@/components/FormModal";
 import { Class, Lesson, Prisma, Subject, Teacher } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
@@ -130,7 +129,7 @@ const LessonListPage = async ({
                         <button className="w-8 h-8 flex items-center justify-center rounded-full bg-NYellow">
                             <Image src="/sort.png" alt="" width={14} height={14} />
                         </button>
-                        <FormContainer table="lesson" type="create" />
+                        {role === "admin" && <FormContainer table="lesson" type="create" />}
                     </div>
                 </div>
             </div>

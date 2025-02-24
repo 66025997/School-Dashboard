@@ -2,7 +2,6 @@ import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import Image from "next/image";
-import Link from "next/link";
 import React from "react";
 import { Class, Lesson, Prisma, Subject, Teacher } from "@prisma/client";
 import prisma from "@/lib/prisma";
@@ -37,12 +36,12 @@ const columns = [
         ? [
             {
                 header: "Actions",
-                accessor: "actions",
-                className: "",
+                accessor: "action",
             },
         ]
         : []),
 ];
+
 const renderRow = (item: LessonList) => (
     <tr
         key={item.id}
@@ -75,7 +74,6 @@ const LessonListPage = async ({
     const p = page ? parseInt(page) : 1;
 
     // URL  PARAMS CONDITION
-
     const query: Prisma.LessonWhereInput = {};
 
     if (queryParams) {
@@ -107,7 +105,7 @@ const LessonListPage = async ({
             include: {
                 subject: { select: { name: true } },
                 class: { select: { name: true } },
-                teacher: { select: { name: true, surname: true } },
+                teacher: { select: { id: true, name: true, surname: true } },
             },
             take: ITEM_PER_PAGE,
             skip: ITEM_PER_PAGE * (p - 1),
@@ -135,7 +133,7 @@ const LessonListPage = async ({
             </div>
             {/* LIST */}
             <Table columns={columns} renderRow={renderRow} data={data} />
-            {/* PAGINTATION */}
+            {/* PAGINATION */}
             <Pagination page={p} count={count} />
         </div>
     );

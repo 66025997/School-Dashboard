@@ -16,8 +16,8 @@ const Webpage: React.FC<Props> = () => {
           <div>
             <ul className="flex space-x-4 text-gray-600">
               <li><a href="#" className="hover:text-white">Dashboard</a></li>
-              <li><a href="#" className="hover:text-white">Resources</a></li>
-              <li><a href="#" className="hover:text-white">Contact</a></li>
+              <li><a href="#resources" className="hover:text-white">Resources</a></li>
+              <li><a href="#contact" className="hover:text-white">Contact</a></li>
             </ul>
           </div>
         </div>
@@ -31,7 +31,7 @@ const Webpage: React.FC<Props> = () => {
         </div>
       </section>
 
-      <section className="py-12 bg-blue-100">
+      <section id="resources" className="py-12 bg-blue-100">
         <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
             <img src="Webpage/Academics.jpg" alt="Academics" className="mx-auto mb-4 rounded-md shadow-md" />
@@ -86,14 +86,12 @@ const Webpage: React.FC<Props> = () => {
 
       <Service />
 
-      <footer className="bg-blue-950 text-white py-8">
+      <footer id="contact" className="bg-blue-950 text-white py-8">
         <div className="container mx-auto px-6">
           <div className="flex justify-between items-center">
             <p className="text-sm">&copy; School Dashboard 2025. All Rights Reserved.</p>
             <ul className="flex space-x-4 text-sm">
               <li><a href="#" className="hover:text-gray-400">Dashboard Info</a></li>
-              <li><a href="#" className="hover:text-gray-400">Support</a></li>
-              <li><a href="#" className="hover:text-gray-400">Contact</a></li>
             </ul>
           </div>
         </div>

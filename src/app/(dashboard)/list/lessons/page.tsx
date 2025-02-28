@@ -13,9 +13,7 @@ const { userId, sessionClaims } = await auth();
 const role = (sessionClaims?.metadata as { role?: string })?.role;
 const currentUserId = userId;
 
-type LessonList = Lesson & { subject: Subject } & { class: Class } & {
-    teacher: Teacher;
-};
+type LessonList = Lesson & { subject: Subject } & { class: Class } & { teacher: Teacher };
 
 const columns = [
     {
@@ -32,7 +30,7 @@ const columns = [
         accessor: "teacher",
         className: "hidden md:table-cell",
     },
-    ...(role === "admin"
+    ...(role === "admin" || role === "teacher"
         ? [
             {
                 header: "Actions",
@@ -54,26 +52,22 @@ const renderRow = (item: LessonList) => (
         </td>
         <td>
             <div className="flex items-center gap-2">
-                {role === "admin" && (
+                {role === "admin" || (role === "teacher" && item.teacher.id === currentUserId) ? (
                     <>
                         <FormContainer table="lesson" type="update" data={item} />
                         <FormContainer table="lesson" type="delete" id={item.id} />
                     </>
-                )}
+                ) : null}
             </div>
         </td>
     </tr>
 );
 
-const LessonListPage = async ({
-    searchParams,
-}: {
-    searchParams: { [key: string]: string | undefined };
-}) => {
+const LessonListPage = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
     const { page, ...queryParams } = await searchParams;
     const p = page ? parseInt(page) : 1;
 
-    // URL  PARAMS CONDITION
+    // URL PARAMS CONDITION
     const query: Prisma.LessonWhereInput = {};
 
     if (queryParams) {
@@ -99,6 +93,11 @@ const LessonListPage = async ({
         }
     }
 
+    if (role === "teacher") {
+        if (currentUserId) {
+            query.teacherId = currentUserId;
+        }
+    }
     const [data, count] = await prisma.$transaction([
         prisma.lesson.findMany({
             where: query,
@@ -127,7 +126,9 @@ const LessonListPage = async ({
                         <button className="w-8 h-8 flex items-center justify-center rounded-full bg-NYellow">
                             <Image src="/sort.png" alt="" width={14} height={14} />
                         </button>
-                        {role === "admin" && <FormContainer table="lesson" type="create" />}
+                        {(role === "admin" || role === "teacher") && (
+                            <FormContainer table="lesson" type="create" />
+                        )}
                     </div>
                 </div>
             </div>

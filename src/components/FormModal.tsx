@@ -78,7 +78,7 @@ const AnnouncementForm = dynamic(() => import("./forms/AnnouncementForm"), {
 const EventForm = dynamic(() => import("./forms/EventForm"), {
   loading: () => <h1>Loading...</h1>,
 });
-const ResultForm = dynamic(() => import("./forms/ResultForm"), {
+const ResultForm = dynamic(() => import("./forms/(stop)ResultForm"), {
   loading: () => <h1>Loading...</h1>,
 });
 // TODO: OTHER FORMS

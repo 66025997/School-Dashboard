@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
 import { useFormState } from "react-dom";
-import { Dispatch, SetStateAction, useActionState, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import {
@@ -12,12 +12,6 @@ import {
     AssignmentSchema,
 } from "@/lib/formValidationSchemas";
 import { createAssignment, updateAssignment } from "@/lib/actions";
-
-const formatDateForInput = (date: string | Date) => {
-    const d = new Date(date);
-    if (isNaN(d.getTime())) return "";
-    return d.toISOString().slice(0, 16);
-};
 
 const AssignmentForm = ({
     type,
@@ -81,8 +75,8 @@ const AssignmentForm = ({
                 />
                 <InputField
                     label="Start Date"
-                    name="startTime"
-                    defaultValue={formatDateForInput(data?.startDate)}
+                    name="startDate"
+                    defaultValue={data?.startTime}
                     register={register}
                     error={errors?.startDate}
                     type="datetime-local"
@@ -90,7 +84,7 @@ const AssignmentForm = ({
                 <InputField
                     label="Due Date"
                     name="dueDate"
-                    defaultValue={formatDateForInput(data?.dueDate)}
+                    defaultValue={data?.endTime}
                     register={register}
                     error={errors?.dueDate}
                     type="datetime-local"

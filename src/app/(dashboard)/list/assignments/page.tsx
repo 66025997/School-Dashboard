@@ -173,7 +173,7 @@ const AssignmentsListPage = async ({
                             <Image src="/sort.png" alt="" width={14} height={14} />
                         </button>
                         {(role === "admin" || role === "teacher") && (
-                            <FormContainer table="exam" type="create" />
+                            <FormContainer table="assignment" type="create" />
                         )}
                     </div>
                 </div>

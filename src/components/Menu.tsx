@@ -66,12 +66,12 @@ const menuItems = [
       //   href: "/list/results",
       //   visible: ["admin", "teacher", "student", "parent"],
       // },
-      {
-        icon: "/attendance.png",
-        label: "Attendance",
-        href: "/list/attendance",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
+      // {
+      //   icon: "/attendance.png",
+      //   label: "Attendance",
+      //   href: "/list/attendance",
+      //   visible: ["admin", "teacher", "student", "parent"],
+      // },
       {
         icon: "/calendar.png",
         label: "Events",
@@ -106,7 +106,7 @@ const Menu = async () => {
                 <Link
                   href={item.href}
                   key={item.label}
-                  className="flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-2 rounded-md hover:bg-smSkyLight"
+                  className="flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-2 rounded-md hover:bg-NSkyLight"
                 >
                   <Image src={item.icon} alt="" width={30} height={30} />
                   <span className="hidden lg:block">{item.label}</span>

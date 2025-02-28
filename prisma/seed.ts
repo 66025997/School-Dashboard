@@ -48,7 +48,7 @@ async function main() {
   await prisma.subject.createMany({ data: subjectData });
 
   // TEACHER
-  for (let i = 1; i <= 15; i++) {
+  for (let i = 1; i <= 20; i++) {
     await prisma.teacher.create({
       data: {
         id: `teacher${i}`,
@@ -81,7 +81,7 @@ async function main() {
   };
   
   // LESSON
-  for (let i = 1; i <= 30; i++) {
+  for (let i = 1; i <= 20; i++) {
     const startTime = getRandomStartTime();
     const endTime = new Date(startTime);
     endTime.setHours(startTime.getHours() + 1);
@@ -101,7 +101,7 @@ async function main() {
 
 
   // PARENT
-  for (let i = 1; i <= 25; i++) {
+  for (let i = 1; i <=10; i++) {
     await prisma.parent.create({
       data: {
         id: `parentId${i}`,
@@ -116,7 +116,7 @@ async function main() {
   }
 
   // STUDENT
-  for (let i = 1; i <= 50; i++) {
+  for (let i = 1; i <= 20; i++) {
     await prisma.student.create({
       data: {
         id: `student${i}`,
@@ -137,7 +137,7 @@ async function main() {
   }
 
   // EVENT
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 3; i++) {
     await prisma.event.create({
       data: {
         title: `Event ${i}`,
@@ -150,7 +150,7 @@ async function main() {
   }
 
   // ANNOUNCEMENT
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 3; i++) {
     await prisma.announcement.create({
       data: {
         title: `Announcement ${i}`,
@@ -173,3 +173,4 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
+

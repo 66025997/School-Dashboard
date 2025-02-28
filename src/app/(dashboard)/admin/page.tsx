@@ -1,9 +1,11 @@
 import UserCard from "@/components/UserCard";
 import Announcements from "@/components/Announcements";
 import CountChartContainer from "@/components/CountChartContainer";
-import AttendanceChartContainer from "@/components/AttendanceChartContainer";
 import EventCalendarContainer from "@/components/EventCalendarContainer";
+
 import React from "react";
+import ClassesScrollContainer from "@/components/ClassesScrollContainer";
+
 
 const AdminPage = ({
     searchParams,
@@ -29,7 +31,7 @@ const AdminPage = ({
                     </div>
                     {/* ATTENDANCE CHART */}
                     <div className="w-full lg:w-2/3 h-[480px]">
-                        <AttendanceChartContainer />
+                        <ClassesScrollContainer />
                     </div>
                 </div>
                 {/* BOTTOM CHART */}

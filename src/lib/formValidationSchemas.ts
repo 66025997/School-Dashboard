@@ -1,5 +1,15 @@
 import { z } from "zod";
 
+enum Day {
+    MONDAY = "MONDAY",
+    TUESDAY = "TUESDAY",
+    WEDNESDAY = "WEDNESDAY",
+    THURSDAY = "THURSDAY",
+    FRIDAY = "FRIDAY",
+    SATURDAY = "SATURDAY",
+    SUNDAY = "SUNDAY",
+}
+
 export const subjectSchema = z.object({
     id: z.coerce.number().optional(),
     name: z.string().min(1, { message: "Subject name is required!" }),
@@ -147,12 +157,13 @@ export type ParentSchema = z.infer<typeof parentSchema>;
 
 export const lessonSchema = z.object({
     id: z.coerce.number().optional(),
-    name: z.string().min(1, { message: "Name is required!" }),
-    day: z.string().min(1, { message: "Day is required!" }),
-    startTime: z.coerce.date({ message: "Start time is required!" }),
-    endTime: z.coerce.date({ message: "End time is required!" }),
-    subjectId: z.coerce.number().min(1, { message: "Subject is required!" }),
-    classId: z.coerce.number({ message: "Class is required!" }),
+    name: z.string().min(4, { message: "Lesson name is required!" }),
+    day: z.nativeEnum(Day, { message: "Lesson Day is Required!" }),
+    startTime: z.coerce.date({ message: "Lesson start time is Required!" }),
+    endTime: z.coerce.date({ message: "Lesson end time is Required!" }),
+    classId: z.coerce.number(),
+    subjectId: z.coerce.number(),
     teacherId: z.coerce.string().min(1, { message: "Teacher is required!" }),
 });
+
 export type LessonSchema = z.infer<typeof lessonSchema>;

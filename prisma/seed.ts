@@ -1,9 +1,20 @@
-import { Day, PrismaClient, UserSex } from "@prisma/client";
+import { PrismaClient, UserSex } from "@prisma/client"; // ลบ Day ออก
 const prisma = new PrismaClient();
 
 const getThaiDate = (date: Date) => {
   return new Date(date.setHours(date.getHours() + 7));
 };
+
+// เพิ่ม enum Day เองในโค้ด (แก้ปัญหาถ้า Prisma Client ไม่ export ออกมา)
+const Day = {
+  MONDAY: "MONDAY",
+  TUESDAY: "TUESDAY",
+  WEDNESDAY: "WEDNESDAY",
+  THURSDAY: "THURSDAY",
+  FRIDAY: "FRIDAY",
+  SATURDAY: "SATURDAY",
+  SUNDAY: "SUNDAY",
+} as const;
 
 async function main() {
   console.log("🌱 Seeding data...");
@@ -70,26 +81,30 @@ async function main() {
   const getRandomStartTime = () => {
     const minHour = 8;
     const maxHour = 15;
-    
+
     const hours = Math.floor(Math.random() * (maxHour - minHour + 1)) + minHour;
     const minutes = [0, 15, 30, 45][Math.floor(Math.random() * 4)];
-    
+
     const startTime = new Date();
     startTime.setHours(hours, minutes, 0, 0);
-  
+
     return startTime;
   };
-  
+
   // LESSON
   for (let i = 1; i <= 20; i++) {
     const startTime = getRandomStartTime();
     const endTime = new Date(startTime);
     endTime.setHours(startTime.getHours() + 1);
-  
+
+    // แก้ให้เลือกค่า `Day` โดยตรง
+    const dayKeys = Object.keys(Day) as (keyof typeof Day)[];
+    const randomDay = Day[dayKeys[Math.floor(Math.random() * dayKeys.length)]];
+
     await prisma.lesson.create({
       data: {
         name: `Lesson${i}`,
-        day: Day[Object.keys(Day)[Math.floor(Math.random() * Object.keys(Day).length)] as keyof typeof Day],
+        day: randomDay,
         startTime: startTime.toISOString(),
         endTime: endTime.toISOString(),
         subjectId: (i % 10) + 1,
@@ -97,11 +112,10 @@ async function main() {
         teacherId: `teacher${(i % 15) + 1}`,
       },
     });
-  }  
-
+  }
 
   // PARENT
-  for (let i = 1; i <=10; i++) {
+  for (let i = 1; i <= 10; i++) {
     await prisma.parent.create({
       data: {
         id: `parentId${i}`,

@@ -33,7 +33,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/(dashboard)/list/attendance/page.tsx.bak"
+    "src/app/(dashboard)/list/attendance/page.tsx.bak",
+    "src/app/api/attendance(stop)/route.ts.bak"
   ],
   "exclude": [
     "node_modules"

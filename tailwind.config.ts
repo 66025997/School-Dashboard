@@ -23,6 +23,7 @@ const config: Config = {
         NYellow: "#FFE5AE",
         NYellowLight: "#FEEFD0",
         NGreen: "#D9FFD9",
+        Bisque: "#FFFAF0"
       },
     },
   },

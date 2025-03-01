@@ -58,7 +58,7 @@ const Webpage: React.FC<Props> = () => {
       <section className="py-12 bg-blue-100">
         <div className="container mx-auto px-6 text-center">
           <blockquote className="text-lg italic text-gray-700 max-w-xl mx-auto">
-            "The School Dashboard is a powerful platform designed to provide not only essential academic tools and resources but also to foster a sense of connection and growth within the school community. It equips students, parents, and teachers with the necessary tools to succeed academically while supporting the holistic development of individuals in an environment of collaboration and shared values."
+                      &quot;The School Dashboard is a powerful platform designed to provide not only essential academic tools and resources but also to foster a sense of connection and growth within the school community. It equips students, parents, and teachers with the necessary tools to succeed academically while supporting the holistic development of individuals in an environment of collaboration and shared values.&quot;
           </blockquote>
           <p className="mt-4 text-gray-500">- Kaitoy , Codomo , Mamypoko | The strong woman behind the development of this server</p>
         </div>

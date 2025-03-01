@@ -4,7 +4,7 @@ const slides = [
   { title: "Subjects", text: "Manage information on the subjects offered in the school, including the assignment of teachers for each subject." },
   { title: "Classes", text: "Manage classroom information." },
   { title: "Lessons", text: "Manage the lessons or content that teachers want students to study." },
-  { title: "Eames", text: "Manage exam information such as exam schedules, Results." },
+  { title: "Exames", text: "Manage exam information such as exam schedules, Results." },
   { title: "Assignments", text: "For teachers to create and track assignments to students." },
   { title: "Events", text: "Create and track school activities." },
   { title: "Announcements", text: "Create and manage announcements about important information or school news." }

@@ -86,12 +86,12 @@ const AnnouncementListPage = async ({
     },
     ...(role === "admin" || role === "teacher"
       ? [
-          {
-            header: "Actions",
-            accessor: "actions",
-            className: "",
-          },
-        ]
+        {
+          header: "Actions",
+          accessor: "actions",
+          className: "",
+        },
+      ]
       : []),
   ];
 
@@ -134,7 +134,9 @@ const AnnouncementListPage = async ({
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-NYellow">
               <Image src="/sort.png" alt="" width={14} height={14} />
             </button>
-            <FormContainer table="announcement" type="create" />
+            {(role === "admin" || role === "teacher") && (
+              <FormContainer table="announcement" type="create" />
+            )}
           </div>
         </div>
       </div>

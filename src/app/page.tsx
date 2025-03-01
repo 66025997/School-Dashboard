@@ -1,12 +1,23 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Spline from "@splinetool/react-spline";
 import Content from "@/components/webpage/Content";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 export default function Webpage() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const { isSignedIn, isLoaded: userLoaded, user } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (userLoaded && isSignedIn) {
+      const role = user?.publicMetadata.role ?? "dashboard";
+      router.replace(`/${role}`);
+    }
+  }, [userLoaded, isSignedIn, user, router]);
 
   const handleLoad = () => {
     setTimeout(() => setIsLoaded(true), 600);

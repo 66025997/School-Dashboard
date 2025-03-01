@@ -3,12 +3,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
-import { Dispatch, SetStateAction, useActionState, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { resultSchema, ResultSchema } from "@/lib/formValidationSchemas";
 import { createResult, updateResult } from "@/lib/actions";
 import { number } from "zod";
+import { useFormState } from "react-dom";
 
 const ResultForm = ({
     type,
@@ -31,7 +32,7 @@ const ResultForm = ({
 
     // AFTER REACT 19 IT'LL BE USEACTIONSTATE
 
-    const [state, formAction] = useActionState(
+    const [state, formAction] = useFormState(
         type === "create" ? createResult : updateResult,
         {
             success: false,

@@ -9,62 +9,15 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 import { auth } from "@clerk/nextjs/server";
 import FormContainer from "@/components/FormContainer";
 
-const { userId, sessionClaims } = await auth();
-const role = (sessionClaims?.metadata as { role?: string })?.role;
-const currentUserId = userId;
-
 type LessonList = Lesson & { subject: Subject } & { class: Class } & { teacher: Teacher };
 
-const columns = [
-    {
-        header: "Subject Name",
-        accessor: "name",
-        className: "",
-    },
-    {
-        header: "Class",
-        accessor: "class",
-    },
-    {
-        header: "Teacher",
-        accessor: "teacher",
-        className: "hidden md:table-cell",
-    },
-    ...(role === "admin" || role === "teacher"
-        ? [
-            {
-                header: "Actions",
-                accessor: "action",
-            },
-        ]
-        : []),
-];
-
-const renderRow = (item: LessonList) => (
-    <tr
-        key={item.id}
-        className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-NPurpleLight"
-    >
-        <td className="flex items-center gap-4 p-4">{item.subject.name}</td>
-        <td>{item.class.name}</td>
-        <td className="hidden md:table-cell">
-            {item.teacher.name + " " + item.teacher.surname}
-        </td>
-        <td>
-            <div className="flex items-center gap-2">
-                {role === "admin" || (role === "teacher" && item.teacher.id === currentUserId) ? (
-                    <>
-                        <FormContainer table="lesson" type="update" data={item} />
-                        <FormContainer table="lesson" type="delete" id={item.id} />
-                    </>
-                ) : null}
-            </div>
-        </td>
-    </tr>
-);
-
 const LessonListPage = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
-    const { page, ...queryParams } = await searchParams;
+    // ดึงข้อมูลผู้ใช้จาก Clerk Auth
+    const { userId, sessionClaims } = await auth();
+    const role = (sessionClaims?.metadata as { role?: string })?.role || "guest";
+    const currentUserId = userId;
+
+    const { page, ...queryParams } = searchParams;
     const p = page ? parseInt(page) : 1;
 
     // URL PARAMS CONDITION
@@ -93,11 +46,10 @@ const LessonListPage = async ({ searchParams }: { searchParams: { [key: string]:
         }
     }
 
-    if (role === "teacher") {
-        if (currentUserId) {
-            query.teacherId = currentUserId;
-        }
+    if (role === "teacher" && currentUserId) {
+        query.teacherId = currentUserId;
     }
+
     const [data, count] = await prisma.$transaction([
         prisma.lesson.findMany({
             where: query,
@@ -111,6 +63,56 @@ const LessonListPage = async ({ searchParams }: { searchParams: { [key: string]:
         }),
         prisma.lesson.count({ where: query }),
     ]);
+
+    // กำหนด Columns สำหรับ Table
+    const columns = [
+        {
+            header: "Subject Name",
+            accessor: "name",
+            className: "",
+        },
+        {
+            header: "Class",
+            accessor: "class",
+        },
+        {
+            header: "Teacher",
+            accessor: "teacher",
+            className: "hidden md:table-cell",
+        },
+        ...(role === "admin" || role === "teacher"
+            ? [
+                {
+                    header: "Actions",
+                    accessor: "action",
+                },
+            ]
+            : []),
+    ];
+
+    // ฟังก์ชัน Render Row ใน Table
+    const renderRow = (item: LessonList) => (
+        <tr
+            key={item.id}
+            className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-NPurpleLight"
+        >
+            <td className="flex items-center gap-4 p-4">{item.subject.name}</td>
+            <td>{item.class.name}</td>
+            <td className="hidden md:table-cell">
+                {item.teacher.name + " " + item.teacher.surname}
+            </td>
+            <td>
+                <div className="flex items-center gap-2">
+                    {role === "admin" || (role === "teacher" && item.teacher.id === currentUserId) ? (
+                        <>
+                            <FormContainer table="lesson" type="update" data={item} />
+                            <FormContainer table="lesson" type="delete" id={item.id} />
+                        </>
+                    ) : null}
+                </div>
+            </td>
+        </tr>
+    );
 
     return (
         <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">

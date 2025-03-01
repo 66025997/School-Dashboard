@@ -9,62 +9,22 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 import FormContainer from "@/components/FormContainer";
 import { auth } from "@clerk/nextjs/server";
 
-const { userId, sessionClaims } = await auth();
-const role = (sessionClaims?.metadata as { role?: string })?.role;
-const currentUserId=userId;
-
 type SubjectList = Subject & { teachers: Teacher[] };
-
-const columns = [
-  {
-    header: "Subject Name",
-    accessor: "name",
-    className: "",
-  },
-  {
-    header: "Teachers",
-    accessor: "teachers",
-    className: "hidden md:table-cell",
-  },
-  {
-    header: "Actions",
-    accessor: "actions",
-    className: "",
-  },
-];
-
-const renderRow = (item: SubjectList) => (
-  <tr
-    key={item.id}
-    className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-NPurpleLight"
-  >
-    <td className="flex items-center gap-4 p-4">{item.name}</td>
-    <td className="hidden md:table-cell">
-      {item.teachers.map((teacher) => teacher.name).join(",")}
-    </td>
-    <td>
-      <div className="flex items-center gap-2">
-        {role === "admin" && (
-          <>
-            <FormContainer table="subject" type="update" data={item} />
-            <FormContainer table="subject" type="delete" id={item.id} />
-          </>
-        )}
-      </div>
-    </td>
-  </tr>
-);
 
 const SubjectsListPage = async ({
   searchParams,
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
-  const { page, ...queryParams } = await searchParams;
+  // ดึงข้อมูลผู้ใช้จาก Clerk Auth
+  const { userId, sessionClaims } = await auth();
+  const role = (sessionClaims?.metadata as { role?: string })?.role || "guest";
+  const currentUserId = userId;
+
+  const { page, ...queryParams } = searchParams;
   const p = page ? parseInt(page) : 1;
 
-  // URL  PARAMS CONDITION
-
+  // URL PARAMS CONDITION
   const query: Prisma.SubjectWhereInput = {};
 
   if (queryParams) {
@@ -93,6 +53,52 @@ const SubjectsListPage = async ({
     prisma.subject.count({ where: query }),
   ]);
 
+  // กำหนด Columns สำหรับ Table
+  const columns = [
+    {
+      header: "Subject Name",
+      accessor: "name",
+      className: "",
+    },
+    {
+      header: "Teachers",
+      accessor: "teachers",
+      className: "hidden md:table-cell",
+    },
+    ...(role === "admin"
+      ? [
+          {
+            header: "Actions",
+            accessor: "actions",
+            className: "",
+          },
+        ]
+      : []),
+  ];
+
+  // ฟังก์ชัน Render Row ใน Table
+  const renderRow = (item: SubjectList) => (
+    <tr
+      key={item.id}
+      className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-NPurpleLight"
+    >
+      <td className="flex items-center gap-4 p-4">{item.name}</td>
+      <td className="hidden md:table-cell">
+        {item.teachers.map((teacher) => teacher.name).join(", ")}
+      </td>
+      <td>
+        <div className="flex items-center gap-2">
+          {role === "admin" && (
+            <>
+              <FormContainer table="subject" type="update" data={item} />
+              <FormContainer table="subject" type="delete" id={item.id} />
+            </>
+          )}
+        </div>
+      </td>
+    </tr>
+  );
+
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       {/* TOP */}
@@ -113,7 +119,7 @@ const SubjectsListPage = async ({
       </div>
       {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={data} />
-      {/* PAGINTATION */}
+      {/* PAGINATION */}
       <Pagination page={p} count={count} />
     </div>
   );

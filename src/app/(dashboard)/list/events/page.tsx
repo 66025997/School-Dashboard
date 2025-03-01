@@ -14,8 +14,9 @@ const EventListPage = async ({
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
+  // ดึงข้อมูลผู้ใช้จาก Clerk Auth
   const { userId, sessionClaims } = await auth();
-  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const role = (sessionClaims?.metadata as { role?: string })?.role || "guest";
   const currentUserId = userId;
 
   const { page, ...queryParams } = searchParams;
@@ -53,7 +54,6 @@ const EventListPage = async ({
     ];
   }
 
-
   const [data, count] = await prisma.$transaction([
     prisma.event.findMany({
       where: query,
@@ -67,8 +67,7 @@ const EventListPage = async ({
     prisma.event.count({ where: query }),
   ]);
 
-  // console.log("Fetched Events:", data);
-
+  // กำหนด Columns สำหรับ Table
   const columns = [
     {
       header: "Title",
@@ -96,15 +95,16 @@ const EventListPage = async ({
     },
     ...(role === "admin"
       ? [
-        {
-          header: "Actions",
-          accessor: "actions",
-          className: "",
-        },
-      ]
+          {
+            header: "Actions",
+            accessor: "actions",
+            className: "",
+          },
+        ]
       : []),
   ];
 
+  // ฟังก์ชัน Render Row ใน Table
   const renderRow = (item: Event & { class: Class }) => (
     <tr
       key={item.id}

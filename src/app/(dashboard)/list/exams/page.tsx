@@ -9,9 +9,6 @@ import { Class, Exam, Prisma, Subject, Teacher } from "@prisma/client";
 import FormContainer from "@/components/FormContainer";
 import { auth } from "@clerk/nextjs/server";
 
-const { userId, sessionClaims } = await auth();
-const role = (sessionClaims?.metadata as { role?: string })?.role;
-const currentUserId = userId;
 type ExamList = Exam & {
     lesson: {
         subject: Subject;
@@ -19,6 +16,16 @@ type ExamList = Exam & {
         teacher: Teacher;
     };
 };
+
+const ExamListPage = async ({
+    searchParams,
+}: {
+    searchParams: { [key: string]: string | undefined };
+}) => {
+
+const { userId, sessionClaims } = await auth();
+const role = (sessionClaims?.metadata as { role?: string })?.role;
+const currentUserId = userId;
 
 const columns = [
     {
@@ -77,11 +84,7 @@ const renderRow = (item: ExamList) => (
     </tr>
 );
 
-const ExamListPage = async ({
-    searchParams,
-}: {
-    searchParams: { [key: string]: string | undefined };
-}) => {
+
     const { page, ...queryParams } = await searchParams;
     const p = page ? parseInt(page) : 1;
 

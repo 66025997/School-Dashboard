@@ -11,10 +11,6 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 import { auth } from "@clerk/nextjs/server";
 import FormContainer from "@/components/FormContainer";
 
-const { userId, sessionClaims } = await auth();
-const role = (sessionClaims?.metadata as { role?: string })?.role;
-const currentUserId = userId;
-
 type AssignmentList = Assignment & {
     lesson: {
         subject: Subject;
@@ -22,6 +18,16 @@ type AssignmentList = Assignment & {
         teacher: Teacher;
     };
 };
+
+const AssignmentsListPage = async ({
+    searchParams,
+}: {
+    searchParams: { [key: string]: string | undefined };
+}) => {
+
+const { userId, sessionClaims } = await auth();
+const role = (sessionClaims?.metadata as { role?: string })?.role;
+const currentUserId = userId;
 
 const columns = [
     {
@@ -76,11 +82,7 @@ const renderRow = (item: AssignmentList) => (
     </tr>
 );
 
-const AssignmentsListPage = async ({
-    searchParams,
-}: {
-    searchParams: { [key: string]: string | undefined };
-}) => {
+
     const { page, ...queryParams } = await searchParams;
     const p = page ? parseInt(page) : 1;
 

@@ -1,11 +1,11 @@
-import { PrismaClient, UserSex } from "@prisma/client"; // ลบ Day ออก
+import { PrismaClient, UserSex } from "@prisma/client"; 
 const prisma = new PrismaClient();
 
 const getThaiDate = (date: Date) => {
   return new Date(date.setHours(date.getHours() + 7));
 };
 
-// เพิ่ม enum Day เองในโค้ด (แก้ปัญหาถ้า Prisma Client ไม่ export ออกมา)
+// กำหนดค่า enum Day เอง
 const Day = {
   MONDAY: "MONDAY",
   TUESDAY: "TUESDAY",
@@ -19,23 +19,34 @@ const Day = {
 async function main() {
   console.log("🌱 Seeding data...");
 
-  // ADMIN
-  await prisma.admin.createMany({
-    data: [
-      { id: "admin1", username: "admin1" },
-      { id: "admin2", username: "admin2" },
-    ],
+  // ADMIN (ใช้ upsert แทน createMany)
+  await prisma.admin.upsert({
+    where: { id: "user_2sRED6hIUAvzppvM4SPEH1b3Eii" },
+    update: {},
+    create: { id: "user_2sRED6hIUAvzppvM4SPEH1b3Eii", username: "admin1" },
+  });
+
+  await prisma.admin.upsert({
+    where: { id: "user_2tjTLntihfCz47JFt9cCT3KwJRW" },
+    update: {},
+    create: { id: "user_2tjTLntihfCz47JFt9cCT3KwJRW", username: "admin2" },
   });
 
   // GRADE
   for (let i = 1; i <= 6; i++) {
-    await prisma.grade.create({ data: { level: i } });
+    await prisma.grade.upsert({
+      where: { level: i },
+      update: {},
+      create: { level: i },
+    });
   }
 
   // CLASS
   for (let i = 1; i <= 6; i++) {
-    await prisma.class.create({
-      data: {
+    await prisma.class.upsert({
+      where: { name: `${i}A` },
+      update: {},
+      create: {
         name: `${i}A`,
         gradeId: i,
         capacity: Math.floor(Math.random() * (20 - 15 + 1)) + 15,
@@ -56,12 +67,20 @@ async function main() {
     { name: "Computer Science" },
     { name: "Art" },
   ];
-  await prisma.subject.createMany({ data: subjectData });
+  for (const subject of subjectData) {
+    await prisma.subject.upsert({
+      where: { name: subject.name },
+      update: {},
+      create: subject,
+    });
+  }
 
   // TEACHER
   for (let i = 1; i <= 20; i++) {
-    await prisma.teacher.create({
-      data: {
+    await prisma.teacher.upsert({
+      where: { id: `teacher${i}` },
+      update: {},
+      create: {
         id: `teacher${i}`,
         username: `teacher${i}`,
         name: `TName${i}`,
@@ -71,8 +90,6 @@ async function main() {
         address: `Address${i}`,
         bloodType: "A+",
         sex: i % 2 === 0 ? UserSex.MALE : UserSex.FEMALE,
-        subjects: { connect: [{ id: (i % 10) + 1 }] },
-        classes: { connect: [{ id: (i % 6) + 1 }] },
         birthday: getThaiDate(new Date(new Date().setFullYear(new Date().getFullYear() - 30))),
       },
     });
@@ -81,13 +98,10 @@ async function main() {
   const getRandomStartTime = () => {
     const minHour = 8;
     const maxHour = 15;
-
     const hours = Math.floor(Math.random() * (maxHour - minHour + 1)) + minHour;
     const minutes = [0, 15, 30, 45][Math.floor(Math.random() * 4)];
-
     const startTime = new Date();
     startTime.setHours(hours, minutes, 0, 0);
-
     return startTime;
   };
 
@@ -96,13 +110,13 @@ async function main() {
     const startTime = getRandomStartTime();
     const endTime = new Date(startTime);
     endTime.setHours(startTime.getHours() + 1);
-
-    // แก้ให้เลือกค่า `Day` โดยตรง
     const dayKeys = Object.keys(Day) as (keyof typeof Day)[];
     const randomDay = Day[dayKeys[Math.floor(Math.random() * dayKeys.length)]];
 
-    await prisma.lesson.create({
-      data: {
+    await prisma.lesson.upsert({
+      where: { id: i },
+      update: {},
+      create: {
         name: `Lesson${i}`,
         day: randomDay,
         startTime: startTime.toISOString(),
@@ -116,8 +130,10 @@ async function main() {
 
   // PARENT
   for (let i = 1; i <= 10; i++) {
-    await prisma.parent.create({
-      data: {
+    await prisma.parent.upsert({
+      where: { id: `parentId${i}` },
+      update: {},
+      create: {
         id: `parentId${i}`,
         username: `parentId${i}`,
         name: `PName${i}`,
@@ -131,8 +147,10 @@ async function main() {
 
   // STUDENT
   for (let i = 1; i <= 20; i++) {
-    await prisma.student.create({
-      data: {
+    await prisma.student.upsert({
+      where: { id: `student${i}` },
+      update: {},
+      create: {
         id: `student${i}`,
         username: `student${i}`,
         name: `SName${i}`,
@@ -146,31 +164,6 @@ async function main() {
         gradeId: (i % 6) + 1,
         classId: (i % 6) + 1,
         birthday: getThaiDate(new Date(new Date().setFullYear(new Date().getFullYear() - 10))),
-      },
-    });
-  }
-
-  // EVENT
-  for (let i = 1; i <= 3; i++) {
-    await prisma.event.create({
-      data: {
-        title: `Event ${i}`,
-        description: `Description for Event ${i}`,
-        startTime: getThaiDate(new Date(new Date().setHours(new Date().getHours() + 1))),
-        endTime: getThaiDate(new Date(new Date().setHours(new Date().getHours() + 2))),
-        classId: (i % 5) + 1,
-      },
-    });
-  }
-
-  // ANNOUNCEMENT
-  for (let i = 1; i <= 3; i++) {
-    await prisma.announcement.create({
-      data: {
-        title: `Announcement ${i}`,
-        description: `Description for Announcement ${i}`,
-        date: getThaiDate(new Date()),
-        classId: (i % 5) + 1,
       },
     });
   }
